@@ -3,9 +3,11 @@ package domain;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class user {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
