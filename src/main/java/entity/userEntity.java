@@ -1,14 +1,16 @@
-package domain;
+package entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class user {
+@Table(name="user")
+public class userEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,7 +31,7 @@ public class user {
      private String imgName;
 
      @Builder
-    public user(Long id, String email, String password, String name, String introduction, String imgPath, String imgName){
+    public userEntity(Long id, String email, String password, String name, String introduction, String imgPath, String imgName){
          this.id = id;
          this.email = email;
          this.password = password;
@@ -40,5 +42,13 @@ public class user {
      }
 
 
+     @Autowired
+    public String getEmail(){
+         return email;
+     }
 
+     @Autowired
+    public String getPassword(){
+         return password;
+     }
 }

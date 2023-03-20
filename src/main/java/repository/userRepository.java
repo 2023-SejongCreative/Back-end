@@ -1,10 +1,12 @@
 package repository;
 
-import domain.user;
+import entity.userEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface userRepository extends JpaRepository<user, Long> {
-    Optional<user> findByemail(String email);
+public interface userRepository extends JpaRepository<userEntity, Long> {
+
+    //email로 user 정보 찾기
+    Optional<userEntity> findByemail(String email);
 }
