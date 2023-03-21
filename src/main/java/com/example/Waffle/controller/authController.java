@@ -1,19 +1,21 @@
-package controller;
+package com.example.Waffle.controller;
 
-import dto.loginDto;
-import dto.userDto;
-import entity.userEntity;
+import com.example.Waffle.dto.loginDto;
+import com.example.Waffle.entity.userEntity;
+import com.example.Waffle.exception.errorCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import service.userService;
+import org.springframework.web.bind.annotation.*;
+import com.example.Waffle.service.userService;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 @Controller
-
 public class authController {
+;
 
     private final userService userService;
 
@@ -27,9 +29,14 @@ public class authController {
                         @RequestParam("password") String password){
 
 
+        System.out.println(email);
+        System.out.println(password);
         loginDto loginDto = new loginDto(email, password);
 
         userEntity userEntity = userService.login(loginDto);
+        if(userEntity == null){
+            return ResponseEntity.badRequest().body("실패");
+        }
 
         return ResponseEntity.ok("성공");
     }

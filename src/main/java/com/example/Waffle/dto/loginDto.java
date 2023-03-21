@@ -1,4 +1,4 @@
-package dto;
+package com.example.Waffle.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

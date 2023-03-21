@@ -1,6 +1,6 @@
-package dto;
+package com.example.Waffle.dto;
 
-import entity.userEntity;
+import com.example.Waffle.entity.userEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

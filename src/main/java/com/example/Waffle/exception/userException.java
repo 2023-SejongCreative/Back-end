@@ -1,4 +1,4 @@
-package exception;
+package com.example.Waffle.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,4 +8,5 @@ import lombok.Getter;
 public class userException extends RuntimeException{
 
     private errorCode errorCode;
+
 }

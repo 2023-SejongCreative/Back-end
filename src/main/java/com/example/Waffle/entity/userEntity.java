@@ -1,4 +1,4 @@
-package entity;
+package com.example.Waffle.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

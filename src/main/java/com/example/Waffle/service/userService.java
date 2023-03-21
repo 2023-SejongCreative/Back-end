@@ -1,13 +1,12 @@
-package service;
+package com.example.Waffle.service;
 
-import dto.loginDto;
-import dto.userDto;
-import entity.userEntity;
-import exception.errorCode;
-import exception.userException;
+import com.example.Waffle.dto.loginDto;
+import com.example.Waffle.entity.userEntity;
+import com.example.Waffle.exception.errorCode;
+import com.example.Waffle.exception.userException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repository.userRepository;
+import com.example.Waffle.repository.userRepository;
 
 
 @Service
@@ -17,6 +16,8 @@ public class userService {
 
     @Autowired
     public userService(userRepository userRepository) {
+
+
         this.userRepository = userRepository;
     }
 
