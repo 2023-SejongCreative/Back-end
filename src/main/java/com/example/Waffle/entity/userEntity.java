@@ -1,14 +1,16 @@
-package domain;
+package com.example.Waffle.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class user {
+@Table(name="user")
+public class userEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,16 +31,20 @@ public class user {
      private String imgName;
 
      @Builder
-    public user(Long id, String email, String password, String name, String introduction, String imgPath, String imgName){
-         this.id = id;
+    public userEntity(String email, String password, String name){
          this.email = email;
          this.password = password;
          this.name = name;
-         this.introduction = introduction;
-         this.imgPath = imgPath;
-         this.imgName = imgName;
      }
 
 
+     @Autowired
+    public String getEmail(){
+         return email;
+     }
 
+     @Autowired
+    public String getPassword(){
+         return password;
+     }
 }
