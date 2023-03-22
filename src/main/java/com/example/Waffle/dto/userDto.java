@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class userDto {
-    private int id;
+    private Long id;
     private String email;
     private String password;
     private String name;
@@ -26,5 +26,4 @@ public class userDto {
                 .build();
         return userEntity;
     }
-
 }

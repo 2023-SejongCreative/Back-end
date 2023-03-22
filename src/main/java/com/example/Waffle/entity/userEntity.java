@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Entity
@@ -16,28 +16,35 @@ public class userEntity {
     private Long id;
 
     @Column(unique = true)
-    private String email;
+     private String email;
 
-    private String password;
+     private String password;
 
-    private String name;
+     private String name;
 
-    private String introduction;
+     private String introduction;
 
-    @Column(name = "img_path")
-    private String imgPath;
+     @Column(name = "img_path")
+     private String imgPath;
 
-    @Column(name = "img_name")
-    private String imgName;
+     @Column(name = "img_name")
+     private String imgName;
 
-    @Builder
+     @Builder
     public userEntity(String email, String password, String name){
-        this.email = email;
-        this.password = password;
-        this.name = name;
-    }
+         this.email = email;
+         this.password = password;
+         this.name = name;
+     }
 
 
+     @Autowired
+    public String getEmail(){
+         return email;
+     }
 
-
+     @Autowired
+    public String getPassword(){
+         return password;
+     }
 }
