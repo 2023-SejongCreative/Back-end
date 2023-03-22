@@ -11,6 +11,7 @@ import com.example.Waffle.service.userService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -25,9 +26,10 @@ public class authController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<String> login(@RequestParam("email") String email,
-                        @RequestParam("password") String password){
+    public ResponseEntity<String> login(@RequestBody Map<String, String> param){
 
+        String email = param.get("email");
+        String password = param.get("password");
 
         System.out.println(email);
         System.out.println(password);
@@ -37,7 +39,6 @@ public class authController {
         if(userEntity == null){
             return ResponseEntity.badRequest().body("실패");
         }
-
-        return ResponseEntity.ok("성공");
+        return ResponseEntity.ok("로그인에 성공하셨습니다.");
     }
 }

@@ -8,5 +8,4 @@ import lombok.Getter;
 public class userException extends RuntimeException{
 
     private errorCode errorCode;
-
 }
