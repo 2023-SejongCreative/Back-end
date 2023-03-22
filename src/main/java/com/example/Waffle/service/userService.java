@@ -4,22 +4,17 @@ import com.example.Waffle.dto.loginDto;
 import com.example.Waffle.entity.userEntity;
 import com.example.Waffle.exception.errorCode;
 import com.example.Waffle.exception.userException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.Waffle.repository.userRepository;
 
 
 @Service
+@RequiredArgsConstructor
 public class userService {
 
     private final userRepository userRepository;
-
-    @Autowired
-    public userService(userRepository userRepository) {
-
-
-        this.userRepository = userRepository;
-    }
 
     //로그인 처리
     public userEntity login(loginDto loginDto){

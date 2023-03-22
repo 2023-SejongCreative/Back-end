@@ -11,11 +11,4 @@ public class userDto {
     private String email;
     private String password;
     private String name;
-
-    public userDto(userEntity userEntity){
-        this.id = userEntity.getId();
-        this.email = userEntity.getEmail();
-        this.password = userEntity.getPassword();
-        this.name = userEntity.getName();
-    }
 }

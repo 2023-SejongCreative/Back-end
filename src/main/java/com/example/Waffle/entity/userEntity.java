@@ -31,14 +31,10 @@ public class userEntity {
      private String imgName;
 
      @Builder
-    public userEntity(Long id, String email, String password, String name, String introduction, String imgPath, String imgName){
-         this.id = id;
+    public userEntity(String email, String password, String name){
          this.email = email;
          this.password = password;
          this.name = name;
-         this.introduction = introduction;
-         this.imgPath = imgPath;
-         this.imgName = imgName;
      }
 
 

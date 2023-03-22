@@ -3,6 +3,7 @@ package com.example.Waffle.controller;
 import com.example.Waffle.dto.loginDto;
 import com.example.Waffle.entity.userEntity;
 import com.example.Waffle.exception.errorCode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,14 +16,10 @@ import java.util.Map;
 
 
 @Controller
+@RequiredArgsConstructor
 public class authController {
-;
 
     private final userService userService;
-
-    public authController(userService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping("/login")
     @ResponseBody
