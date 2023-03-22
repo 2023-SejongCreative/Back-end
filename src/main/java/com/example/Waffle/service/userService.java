@@ -1,7 +1,9 @@
 package com.example.Waffle.service;
 
 import com.example.Waffle.dto.loginDto;
+import com.example.Waffle.dto.userDto;
 import com.example.Waffle.entity.userEntity;
+import lombok.RequiredArgsConstructor;
 import com.example.Waffle.exception.errorCode;
 import com.example.Waffle.exception.userException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,11 @@ import com.example.Waffle.repository.userRepository;
 public class userService {
 
     private final userRepository userRepository;
+    
+    //회원가입 처리
+    public void register(userEntity userEntity) {
+        this.userRepository.save(userEntity);
+    }
 
     //로그인 처리
     public userEntity login(loginDto loginDto){

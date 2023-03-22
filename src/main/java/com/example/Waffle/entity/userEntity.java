@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name="user")
+@Table(name = "user")
 public class userEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
