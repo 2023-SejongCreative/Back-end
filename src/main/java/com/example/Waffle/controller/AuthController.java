@@ -1,26 +1,22 @@
 package com.example.Waffle.controller;
 
-import com.example.Waffle.dto.userDto;
-import com.example.Waffle.dto.loginDto;
-import com.example.Waffle.entity.userEntity;
-import com.example.Waffle.exception.errorCode;
+import com.example.Waffle.dto.UserDto;
+import com.example.Waffle.dto.LoginDto;
+import com.example.Waffle.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import com.example.Waffle.service.userService;
+import com.example.Waffle.service.UserService;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 
 @Controller
 @RequiredArgsConstructor
-public class authController {
+public class AuthController {
 
-    private final userService userService;
+    private final UserService userService;
 
 //    @GetMapping("/")
 //    public String index(){
@@ -36,11 +32,11 @@ public class authController {
     @ResponseBody
     public ResponseEntity<String> register(@RequestBody Map<String, String> param){
 
-        userDto userDto = new userDto(param.get("email"),
+        UserDto userDto = new UserDto(param.get("email"),
                 param.get("password"),
                 param.get("name"));
 
-        userEntity userEntity = userDto.toEntity();
+        UserEntity userEntity = userDto.toEntity();
         userService.register(userEntity);
         return ResponseEntity.ok("회원가입 성공!");
     }
@@ -54,9 +50,9 @@ public class authController {
 
         System.out.println(email);
         System.out.println(password);
-        loginDto loginDto = new loginDto(email, password);
+        LoginDto loginDto = new LoginDto(email, password);
 
-        userEntity userEntity = userService.login(loginDto);
+        UserEntity userEntity = userService.login(loginDto);
         if(userEntity == null){
             return ResponseEntity.badRequest().body("실패");
         }
