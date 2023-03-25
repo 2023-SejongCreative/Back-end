@@ -8,12 +8,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    INTER_SERVER_ERROR(500,"서버 내부 오류 발생"),
-    NO_USER(400, "일치하는 회원이 없습니다."),
-    NO_PASSWORD(400, "비밀번호가 일치하지 않습니다.");
-
-    private int status;
-
     /*400 BAD_REQUEST : 잘못된 요청*/
     NO_USER(HttpStatus.BAD_REQUEST, "LOGIN-001", "일치하는 회원이 없습니다."),
     NO_PASSWORD(HttpStatus.BAD_REQUEST, "LOGIN-002", "비밀번호가 일치하지 않습니다."),

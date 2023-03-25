@@ -36,7 +36,6 @@ public class AuthController {
                 param.get("password"),
                 param.get("name"));
 
-
 //        UserEntity userEntity = userDto.toEntity();
 //        userService.register(userEntity);
 
@@ -61,8 +60,8 @@ public class AuthController {
         if(userEntity == null){
             return ResponseEntity.badRequest().body("실패");
         }
-        LoginDto loginDto = new LoginDto(param.get("email"),
-                param.get("password"));
+//        LoginDto loginDto = new LoginDto(param.get("email"),
+//                param.get("password"));
 
         userService.login(loginDto);
 

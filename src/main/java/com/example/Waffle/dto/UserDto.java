@@ -18,6 +18,7 @@ public class UserDto {
         this.name = name;
     }
 
+
     public UserEntity toEntity(){
         UserEntity userEntity = new UserEntity().builder()
                 .email(email)

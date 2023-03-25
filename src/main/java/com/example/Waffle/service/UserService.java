@@ -6,6 +6,10 @@ import com.example.Waffle.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.Waffle.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     //회원가입 처리
     public void register(UserEntity userEntity) {
 
@@ -25,21 +31,18 @@ public class UserService {
 
 
     //로그인 처리
-    public UserEntity login(LoginDto loginDto){
-    public boolean checkEmailDuplicate(String email){
-        return userRepository.existsByemail(email);
-    }
+
     @Transactional
-    public void save(UserDto userDto){
+    public void save(UserDto UserDto){
         //아이디 중복 확인
-       if(userRepository.existsByemail(userDto.getEmail())) {
+       if(userRepository.existsByemail(UserDto.getEmail())) {
            throw new UserException(ErrorCode.DUPLICATE_ID);
        }
-
-        //여기서 비밀번호 바꿔주면 됨
+       String encodedPassword = passwordEncoder.encode(UserDto.getPassword());
+       UserEntity userEntity = new UserEntity(UserDto.getEmail(), encodedPassword, UserDto.getName());
 
         //DB 저장
-        this.userRepository.save(userDto.toEntity());
+        this.userRepository.save(userEntity);
     }
 
     //로그인 처리
@@ -51,7 +54,7 @@ public class UserService {
 
 
         //비밀번호가 올바른지 확인
-        if(!loginDto.getPassword().equals(userEntity.getPassword())){
+        if(!passwordEncoder.matches(userEntity.getPassword(), loginDto.getPassword())){
             throw new UserException(ErrorCode.NO_PASSWORD);
         }
         return userEntity;
