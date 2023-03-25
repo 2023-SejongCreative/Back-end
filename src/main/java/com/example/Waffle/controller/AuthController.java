@@ -36,6 +36,7 @@ public class AuthController {
                 param.get("password"),
                 param.get("name"));
 
+
 //        UserEntity userEntity = userDto.toEntity();
 //        userService.register(userEntity);
 
@@ -48,10 +49,23 @@ public class AuthController {
     @ResponseBody
     public ResponseEntity<String> login(@RequestBody Map<String, String> param){
 
+
+        String email = param.get("email");
+        String password = param.get("password");
+
+        System.out.println(email);
+        System.out.println(password);
+        LoginDto loginDto = new LoginDto(email, password);
+
+        UserEntity userEntity = userService.login(loginDto);
+        if(userEntity == null){
+            return ResponseEntity.badRequest().body("실패");
+        }
         LoginDto loginDto = new LoginDto(param.get("email"),
                 param.get("password"));
 
         userService.login(loginDto);
+
 
         return ResponseEntity.ok("로그인에 성공하셨습니다.");
     }

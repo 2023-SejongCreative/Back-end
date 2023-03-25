@@ -23,6 +23,9 @@ public class UserService {
         this.userRepository.save(userEntity);
     }
 
+
+    //로그인 처리
+    public UserEntity login(LoginDto loginDto){
     public boolean checkEmailDuplicate(String email){
         return userRepository.existsByemail(email);
     }
@@ -45,6 +48,7 @@ public class UserService {
         UserEntity userEntity = userRepository.findByemail(loginDto.getEmail()).orElseThrow(
                 () -> new UserException(ErrorCode.NO_USER)
         );
+
 
         //비밀번호가 올바른지 확인
         if(!loginDto.getPassword().equals(userEntity.getPassword())){
