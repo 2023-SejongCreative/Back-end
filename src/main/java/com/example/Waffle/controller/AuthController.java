@@ -36,14 +36,19 @@ public class AuthController {
                 param.get("password"),
                 param.get("name"));
 
-        UserEntity userEntity = userDto.toEntity();
-        userService.register(userEntity);
-        return ResponseEntity.ok("회원가입 성공!");
+
+//        UserEntity userEntity = userDto.toEntity();
+//        userService.register(userEntity);
+
+        userService.save(userDto);
+
+        return ResponseEntity.ok("회원가입에 성공하였습니다.");
     }
 
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<String> login(@RequestBody Map<String, String> param){
+
 
         String email = param.get("email");
         String password = param.get("password");
@@ -56,6 +61,12 @@ public class AuthController {
         if(userEntity == null){
             return ResponseEntity.badRequest().body("실패");
         }
+        LoginDto loginDto = new LoginDto(param.get("email"),
+                param.get("password"));
+
+        userService.login(loginDto);
+
+
         return ResponseEntity.ok("로그인에 성공하셨습니다.");
     }
 }
