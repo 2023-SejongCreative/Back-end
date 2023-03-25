@@ -20,6 +20,7 @@ public class userService {
     
     //회원가입 처리
     public void register(userEntity userEntity) {
+
         this.userRepository.save(userEntity);
     }
 
