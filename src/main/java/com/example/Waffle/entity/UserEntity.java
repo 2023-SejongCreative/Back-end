@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Entity
 @NoArgsConstructor
 @Table(name = "user")
-public class userEntity {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +31,7 @@ public class userEntity {
      private String imgName;
 
      @Builder
-    public userEntity(String email, String password, String name){
+    public UserEntity(String email, String password, String name){
          this.email = email;
          this.password = password;
          this.name = name;

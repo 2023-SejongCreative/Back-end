@@ -1,25 +1,25 @@
 package com.example.Waffle.dto;
 
-import com.example.Waffle.entity.userEntity;
+import com.example.Waffle.entity.UserEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class userDto {
+public class UserDto {
     private Long id;
     private String email;
     private String password;
     private String name;
 
-    public userDto(String email, String password, String name){
+    public UserDto(String email, String password, String name){
         this.email = email;
         this.password = password;
         this.name = name;
     }
 
-    public userEntity toEntity(){
-        userEntity userEntity = new userEntity().builder()
+    public UserEntity toEntity(){
+        UserEntity userEntity = new UserEntity().builder()
                 .email(email)
                 .password(password)
                 .name(name)
