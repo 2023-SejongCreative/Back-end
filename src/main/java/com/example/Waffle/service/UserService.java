@@ -18,14 +18,6 @@ public class UserService {
     private final UserRepository userRepository;
     
     //회원가입 처리
-    public void register(UserEntity userEntity) {
-
-        this.userRepository.save(userEntity);
-    }
-
-    public boolean checkEmailDuplicate(String email){
-        return userRepository.existsByemail(email);
-    }
     @Transactional
     public void save(UserDto userDto){
         //아이디 중복 확인
