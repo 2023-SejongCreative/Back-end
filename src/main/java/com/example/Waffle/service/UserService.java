@@ -20,14 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    //회원가입 처리
-    public void register(UserEntity userEntity) {
-
-        this.userRepository.save(userEntity);
-    }
 
 
     //로그인 처리
@@ -54,7 +48,7 @@ public class UserService {
 
 
         //비밀번호가 올바른지 확인
-        if(!passwordEncoder.matches(userEntity.getPassword(), loginDto.getPassword())){
+        if(!passwordEncoder.matches(loginDto.getPassword(), userEntity.getPassword())){
             throw new UserException(ErrorCode.NO_PASSWORD);
         }
         return userEntity;
