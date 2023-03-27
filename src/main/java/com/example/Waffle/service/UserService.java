@@ -6,9 +6,6 @@ import com.example.Waffle.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.Waffle.repository.UserRepository;
@@ -23,20 +20,16 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
 
-
-    //로그인 처리
-
+    //회원가입 처리
     @Transactional
-    public void save(UserDto UserDto){
+    public void save(UserDto userDto){
         //아이디 중복 확인
-       if(userRepository.existsByemail(UserDto.getEmail())) {
+       if(userRepository.existsByemail(userDto.getEmail())) {
            throw new UserException(ErrorCode.DUPLICATE_ID);
        }
-       String encodedPassword = passwordEncoder.encode(UserDto.getPassword());
-       UserEntity userEntity = new UserEntity(UserDto.getEmail(), encodedPassword, UserDto.getName());
 
         //DB 저장
-        this.userRepository.save(userEntity);
+        this.userRepository.save(userDto.toEntity());
     }
 
     //로그인 처리
@@ -53,4 +46,7 @@ public class UserService {
         }
         return userEntity;
     }
+
+
+
 }

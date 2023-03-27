@@ -3,6 +3,7 @@ package com.example.Waffle.dto;
 import com.example.Waffle.entity.UserEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @NoArgsConstructor
@@ -18,7 +19,6 @@ public class UserDto {
         this.name = name;
     }
 
-
     public UserEntity toEntity(){
         UserEntity userEntity = new UserEntity().builder()
                 .email(email)
@@ -27,4 +27,5 @@ public class UserDto {
                 .build();
         return userEntity;
     }
+
 }

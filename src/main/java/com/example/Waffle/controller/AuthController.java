@@ -5,6 +5,7 @@ import com.example.Waffle.dto.LoginDto;
 import com.example.Waffle.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.example.Waffle.service.UserService;
@@ -17,27 +18,15 @@ import java.util.Map;
 public class AuthController {
 
     private final UserService userService;
-
-//    @GetMapping("/")
-//    public String index(){
-//        return "index.html";
-//    }
-//
-//    @GetMapping("/register")
-//    public String register(){
-//        return "register.html";
-//    }
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity<String> register(@RequestBody Map<String, String> param){
 
         UserDto userDto = new UserDto(param.get("email"),
-                param.get("password"),
+                passwordEncoder.encode(param.get("password")),
                 param.get("name"));
-
-//        UserEntity userEntity = userDto.toEntity();
-//        userService.register(userEntity);
 
         userService.save(userDto);
 
@@ -48,20 +37,8 @@ public class AuthController {
     @ResponseBody
     public ResponseEntity<String> login(@RequestBody Map<String, String> param){
 
-
-        String email = param.get("email");
-        String password = param.get("password");
-
-        System.out.println(email);
-        System.out.println(password);
-        LoginDto loginDto = new LoginDto(email, password);
-
-        UserEntity userEntity = userService.login(loginDto);
-        if(userEntity == null){
-            return ResponseEntity.badRequest().body("실패");
-        }
-//        LoginDto loginDto = new LoginDto(param.get("email"),
-//                param.get("password"));
+        LoginDto loginDto = new LoginDto(param.get("email"),
+                param.get("password"));
 
         userService.login(loginDto);
 
