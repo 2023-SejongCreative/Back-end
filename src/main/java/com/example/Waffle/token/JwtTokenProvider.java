@@ -1,5 +1,8 @@
 package com.example.Waffle.token;
 
+import com.example.Waffle.dto.TokenDto;
+import com.example.Waffle.entity.TokenEntity;
+import com.example.Waffle.repository.TokenRepository;
 import com.example.Waffle.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -9,6 +12,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,10 +20,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -31,26 +35,35 @@ public class JwtTokenProvider {
     private Key key;
 
     //토큰 유효시간 설정
-    private long tokenValidaTime = 500 * 60 * 1000L;
+    private long accessTime = 30 * 60 * 1000L; //30분
+    private long refreshTime = 7 * 24 * 60 * 60 * 1000L; //7일
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final TokenRepository tokenRepository;
 
     //secretKey 인코딩
     @PostConstruct
     protected void init(){
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
         key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    // ATK, RTK 생성
+    public TokenDto createAllToken(String email) {
+        return new TokenDto(createToken(email, "Access"), createToken(email, "Refresh"));
+    }
+
     //JWT 토큰 생성
-    public String createToken(String email){
+    public String createToken(String email, String type){
         Date now = new Date();
+
+        long time = type.equals("Access") ? accessTime : refreshTime;
 
         //Payload - registered claim
         Claims claims = Jwts.claims()
-                .setSubject("access_token")
+                .setSubject(type)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidaTime));
+                .setExpiration(new Date(now.getTime() + accessTime));
 
         //Payload - private claim
         claims.put("email", email);
@@ -79,10 +92,11 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(customUserDetails, "", customUserDetails.getAuthorities());
     }
 
-    // 토큰에서 회원 정보 추출
+    // 토큰에서 회원 정보(Email) 추출
     public String getEmail(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
     }
+
 
     // 토큰 유효성, 만료일자 확인
     public boolean validateToken(String token) {
@@ -95,9 +109,34 @@ public class JwtTokenProvider {
         }
     }
 
+    // refreshToken 토큰 검증
+    // db에 저장되어 있는 token과 비교
+    // db에 저장한다는 것이 jwt token을 사용한다는 강점을 상쇄시킨다.
+    // db 보다는 redis를 사용하는 것이 더욱 좋다. (in-memory db기 때문에 조회속도가 빠르고 주기적으로 삭제하는 기능이 기본적으로 존재합니다.)
+    public Boolean validateRefreshToken(String refreshToken) {
+
+        // 1차 토큰 검증
+        if(!validateToken(refreshToken)) return false;
+
+        // DB에 저장한 토큰 비교
+        Optional<TokenEntity> tokenEntity = tokenRepository.findByEmail(getEmail(refreshToken));
+
+        return tokenEntity.isPresent() && refreshToken.equals(tokenEntity.get().getRefreshToken());
+    }
+
     // Request의 Header에서 token 값 가져오기
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+    public String resolveToken(HttpServletRequest request, String name) {
+        return request.getHeader(name);
+    }
+
+    // 어세스 토큰 헤더 설정
+    public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
+        response.setHeader("Access_Token", accessToken);
+    }
+
+    // 리프레시 토큰 헤더 설정
+    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
+        response.setHeader("Refresh_Token", refreshToken);
     }
 
 }
