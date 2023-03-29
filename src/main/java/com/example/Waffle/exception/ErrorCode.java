@@ -12,6 +12,9 @@ public enum ErrorCode {
     NO_USER(HttpStatus.BAD_REQUEST, "LOGIN-001", "일치하는 회원이 없습니다."),
     NO_PASSWORD(HttpStatus.BAD_REQUEST, "LOGIN-002", "비밀번호가 일치하지 않습니다."),
 
+    /*401 UNAUTHROIZED : 인증 안됨*/
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-001", "리프레시 토큰이 유효하지 않습니다."),
+
     /*409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재*/
     DUPLICATE_ID(HttpStatus.CONFLICT, "REGISTER-001", "아이디가 중복되었습니다."),
 

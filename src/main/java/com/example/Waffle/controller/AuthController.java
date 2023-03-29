@@ -1,10 +1,13 @@
 package com.example.Waffle.controller;
 
+import com.example.Waffle.dto.ResponseDto;
 import com.example.Waffle.dto.UserDto;
 import com.example.Waffle.dto.LoginDto;
 import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.token.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ public class AuthController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final HttpServletResponse response;
 
     @PostMapping("/register")
     @ResponseBody
@@ -42,10 +46,8 @@ public class AuthController {
         LoginDto loginDto = new LoginDto(param.get("email"),
                 param.get("password"));
 
-        userService.login(loginDto);
+        userService.login(loginDto, response);
 
-        String token = jwtTokenProvider.createToken(loginDto.getEmail());
-
-        return ResponseEntity.ok(token);
+        return new ResponseEntity<>("로그인에 성공하였습니다.", HttpStatus.OK);
     }
 }
