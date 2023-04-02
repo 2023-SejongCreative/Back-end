@@ -9,17 +9,21 @@ import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.repository.TokenRepository;
 import com.example.Waffle.token.JwtTokenProvider;
 import io.jsonwebtoken.Jwt;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.Waffle.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -30,6 +34,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
+    private final RedisTemplate redisTemplate;
 
 
     //회원가입 처리
@@ -44,6 +49,7 @@ public class UserService {
         this.userRepository.save(userDto.toEntity());
     }
 
+    @Transactional
     //로그인 처리
     public void login(LoginDto loginDto, HttpServletResponse response){
         //존재하는 유저인지 확인
@@ -59,16 +65,9 @@ public class UserService {
         //ATK, RTK 모두 발급
         TokenDto tokenDto = jwtTokenProvider.createAllToken(loginDto.getEmail());
 
-        // Refresh토큰 DB에 있는지 확인
-        Optional<TokenEntity> tokenEntity = tokenRepository.findByEmail(loginDto.getEmail());
-
-        // 있다면 새토큰 발급후 업데이트
-        if(tokenEntity.isPresent()) {
-            tokenRepository.save(tokenEntity.get().updateToken(tokenDto.getRefreshToken()));
-        }else {// 없다면 새로 만들고 디비 저장
-            TokenEntity newToken = new TokenEntity(tokenDto.getRefreshToken(), loginDto.getEmail());
-            tokenRepository.save(newToken);
-        }
+        // RefreshToken Redis에 저장 -> expirationTime 설정을 통해 자동 삭제 처리
+        redisTemplate.opsForValue()
+                .set("RT:" + loginDto.getEmail(), tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         // response 헤더에 Access Token / Refresh Token 넣음
         setHeader(response, tokenDto);
@@ -80,6 +79,10 @@ public class UserService {
         response.addHeader("Refresh_Token", tokenDto.getRefreshToken());
     }
 
+    @Transactional
+    public void logout(HttpServletRequest request){
+
+    }
 
 
 

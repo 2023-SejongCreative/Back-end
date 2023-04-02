@@ -5,6 +5,7 @@ import com.example.Waffle.dto.UserDto;
 import com.example.Waffle.dto.LoginDto;
 import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.token.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,5 +50,18 @@ public class AuthController {
         userService.login(loginDto, response);
 
         return new ResponseEntity<>("로그인에 성공하였습니다.", HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+
+
+        return "";
+    }
+
+    @GetMapping("/reissue")
+    public String reissue(){
+
+        return "";
     }
 }
