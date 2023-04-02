@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // 어세스 토큰이 만료된 상황 && 리프레시 토큰 또한 존재하는 상황
             else if (refreshToken != null) {
                 // 리프레시 토큰이 유효하고 리프레시 토큰이 DB와 비교했을때 똑같다면
-                if (jwtTokenProvider.validateRefreshToken(refreshToken)) {
+                if (jwtTokenProvider.validateToken(refreshToken)) {
                     // 리프레시 토큰으로 아이디 정보 가져오기
                     String email = jwtTokenProvider.getEmail(refreshToken);
                     // 새로운 어세스 토큰 발급

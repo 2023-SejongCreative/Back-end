@@ -19,6 +19,8 @@ public class TokenDto {
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
     }
 
+
+
     public TokenDto updateToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;

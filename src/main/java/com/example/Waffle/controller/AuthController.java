@@ -8,6 +8,7 @@ import com.example.Waffle.token.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,8 +61,11 @@ public class AuthController {
     }
 
     @GetMapping("/reissue")
-    public String reissue(){
+    public ResponseEntity<Object> reissue(@RequestHeader("refreshToken") String refreshToken,
+                          @RequestHeader("accessToken") String accessToken){
 
-        return "";
+        userService.reissue(refreshToken, accessToken, response);
+
+        return new ResponseEntity<>("엑세스 토큰 재발급이 되었습니다.", HttpStatus.OK);
     }
 }

@@ -109,18 +109,18 @@ public class JwtTokenProvider {
         }
     }
 
-    // refreshToken 토큰 검증
-    // db에 저장되어 있는 token과 비교
-    public Boolean validateRefreshToken(String refreshToken) {
-
-        // 1차 토큰 검증
-        if(!validateToken(refreshToken)) return false;
-
-        // DB에 저장한 토큰 비교
-        Optional<TokenEntity> tokenEntity = tokenRepository.findByEmail(getEmail(refreshToken));
-
-        return tokenEntity.isPresent() && refreshToken.equals(tokenEntity.get().getRefreshToken());
-    }
+//    // refreshToken 토큰 검증
+//    // db에 저장되어 있는 token과 비교
+//    public Boolean validateRefreshToken(String refreshToken) {
+//
+//        // 1차 토큰 검증
+//        if(!validateToken(refreshToken)) return false;
+//
+//        // DB에 저장한 토큰 비교
+//        Optional<TokenEntity> tokenEntity = tokenRepository.findByEmail(getEmail(refreshToken));
+//
+//        return tokenEntity.isPresent() && refreshToken.equals(tokenEntity.get().getRefreshToken());
+//    }
 
     // Request의 Header에서 token 값 가져오기
     public String resolveToken(HttpServletRequest request, String name) {
@@ -135,6 +135,15 @@ public class JwtTokenProvider {
     // 리프레시 토큰 헤더 설정
     public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
         response.setHeader("Refresh_Token", refreshToken);
+    }
+
+    //토큰 유효시간 얻기
+    public Long getExpiration(String accessToken) {
+        // accessToken 남은 유효시간
+        Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
+        // 현재 시간
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 
 }

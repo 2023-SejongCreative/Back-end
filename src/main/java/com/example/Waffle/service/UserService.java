@@ -15,12 +15,14 @@ import lombok.RequiredArgsConstructor;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.Waffle.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -82,6 +84,40 @@ public class UserService {
     @Transactional
     public void logout(HttpServletRequest request){
 
+    }
+
+
+    @Transactional
+    public void reissue(String refreshToken, String accessToken, HttpServletResponse response){
+
+        // Refresh Token 확인
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new UserException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // 토큰으로부터 유저 정보를 받아서 저장
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+
+        // Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
+        String redisRefreshToken = (String)redisTemplate.opsForValue().get("RT:" + authentication.getName());
+
+        // 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우
+        if(ObjectUtils.isEmpty(refreshToken)) {
+            throw new UserException(ErrorCode.UNAUTHORIZED);
+        }
+        if(!redisRefreshToken.equals(refreshToken)) {
+            throw new UserException(ErrorCode.UNAUTHORIZED);
+        }
+
+        //새로운 ATK, RTK 모두 발급
+        TokenDto tokenDto = jwtTokenProvider.createAllToken(authentication.getName());
+
+        // RefreshToken Redis 업데이트
+        redisTemplate.opsForValue()
+                .set("RT:" + authentication.getName(), tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+
+        // response 헤더에 Access Token / Refresh Token 넣음
+        setHeader(response, tokenDto);
     }
 
 
