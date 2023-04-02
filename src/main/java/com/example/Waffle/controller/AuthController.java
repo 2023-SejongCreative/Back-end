@@ -54,10 +54,12 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
+    public ResponseEntity<Object> logout(@RequestHeader("refreshToken") String refreshToken,
+                         @RequestHeader("accessToken") String accessToken) {
 
+        userService.logout(refreshToken, accessToken, response);
 
-        return "";
+        return new ResponseEntity<>("로그아웃에 성공하였습니다.", HttpStatus.OK);
     }
 
     @GetMapping("/reissue")

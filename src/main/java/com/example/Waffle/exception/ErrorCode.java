@@ -11,6 +11,7 @@ public enum ErrorCode {
     /*400 BAD_REQUEST : 잘못된 요청*/
     NO_USER(HttpStatus.BAD_REQUEST, "LOGIN-001", "일치하는 회원이 없습니다."),
     NO_PASSWORD(HttpStatus.BAD_REQUEST, "LOGIN-002", "비밀번호가 일치하지 않습니다."),
+    EXPIRATION_ATK(HttpStatus.BAD_REQUEST, "LOGOUT_001", "엑세스 토큰이 만료되없습니다"),
 
     /*401 UNAUTHROIZED : 인증 안됨*/
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-001", "리프레시 토큰이 유효하지 않습니다."),
