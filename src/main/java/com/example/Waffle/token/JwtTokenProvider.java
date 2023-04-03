@@ -1,8 +1,6 @@
 package com.example.Waffle.token;
 
 import com.example.Waffle.dto.TokenDto;
-import com.example.Waffle.entity.TokenEntity;
-import com.example.Waffle.repository.TokenRepository;
 import com.example.Waffle.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -23,7 +21,6 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -39,7 +36,6 @@ public class JwtTokenProvider {
     private long refreshTime = 7 * 24 * 60 * 60 * 1000L; //7일
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final TokenRepository tokenRepository;
 
     //secretKey 인코딩
     @PostConstruct
@@ -94,7 +90,7 @@ public class JwtTokenProvider {
 
     // 토큰에서 회원 정보(Email) 추출
     public String getEmail(String token) {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().get("email").toString();
     }
 
 
@@ -108,19 +104,6 @@ public class JwtTokenProvider {
             return false;
         }
     }
-
-//    // refreshToken 토큰 검증
-//    // db에 저장되어 있는 token과 비교
-//    public Boolean validateRefreshToken(String refreshToken) {
-//
-//        // 1차 토큰 검증
-//        if(!validateToken(refreshToken)) return false;
-//
-//        // DB에 저장한 토큰 비교
-//        Optional<TokenEntity> tokenEntity = tokenRepository.findByEmail(getEmail(refreshToken));
-//
-//        return tokenEntity.isPresent() && refreshToken.equals(tokenEntity.get().getRefreshToken());
-//    }
 
     // Request의 Header에서 token 값 가져오기
     public String resolveToken(HttpServletRequest request, String name) {

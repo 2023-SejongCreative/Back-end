@@ -53,18 +53,26 @@ public class AuthController {
         return new ResponseEntity<>("로그인에 성공하였습니다.", HttpStatus.OK);
     }
 
-    @GetMapping("/logout")
-    public ResponseEntity<Object> logout(@RequestHeader("refreshToken") String refreshToken,
-                         @RequestHeader("accessToken") String accessToken) {
+    @PostMapping("/logout")
+    @ResponseBody
+    public ResponseEntity<Object> logout(@RequestHeader("Refresh_Token") String refreshToken,
+                                         @RequestHeader("Access_Token") String accessToken) {
+
+        // 헤더에서 JWT 토큰 받아오기
+        //String accessToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Access_Token");
+        //String refreshToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Refresh_Token");
 
         userService.logout(refreshToken, accessToken, response);
 
         return new ResponseEntity<>("로그아웃에 성공하였습니다.", HttpStatus.OK);
     }
 
-    @GetMapping("/reissue")
-    public ResponseEntity<Object> reissue(@RequestHeader("refreshToken") String refreshToken,
-                          @RequestHeader("accessToken") String accessToken){
+    @PostMapping("/reissue")
+    public ResponseEntity<Object> reissue(HttpServletRequest request){
+
+        // 헤더에서 JWT 토큰 받아오기
+        String accessToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Access_Token");
+        String refreshToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Refresh_Token");
 
         userService.reissue(refreshToken, accessToken, response);
 

@@ -1,22 +1,15 @@
 package com.example.Waffle.service;
 
 import com.example.Waffle.dto.LoginDto;
-import com.example.Waffle.dto.ResponseDto;
 import com.example.Waffle.dto.TokenDto;
 import com.example.Waffle.dto.UserDto;
-import com.example.Waffle.entity.TokenEntity;
 import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.repository.TokenRepository;
 import com.example.Waffle.token.JwtTokenProvider;
-import io.jsonwebtoken.Jwt;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +17,6 @@ import com.example.Waffle.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 
@@ -35,7 +27,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final TokenRepository tokenRepository;
     private final RedisTemplate redisTemplate;
 
 
