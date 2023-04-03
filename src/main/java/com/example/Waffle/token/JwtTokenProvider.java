@@ -59,7 +59,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims()
                 .setSubject(type)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTime));
+                .setExpiration(new Date(now.getTime() + time));
 
         //Payload - private claim
         claims.put("email", email);

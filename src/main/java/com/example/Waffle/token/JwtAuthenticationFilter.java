@@ -11,9 +11,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -24,9 +26,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        if(request == null){
+            System.out.println("request null");
+        }
+
         // 헤더에서 JWT 토큰 받아오기
-        String accessToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Access_Token");
-        String refreshToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Refresh_Token");
+        String accessToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "access_token");
+        String refreshToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "refresh_token");
 
         System.out.println("["+accessToken+"]");
         System.out.println("["+refreshToken+"]");

@@ -81,17 +81,17 @@ public class UserService {
         }
 
         // Access Token 에서 User email 을 가져오기
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        String email = jwtTokenProvider.getEmail(accessToken);
 
         // Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
-        if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
+        if (redisTemplate.opsForValue().get("RT:" +email) != null) {
             // Refresh Token 삭제
-            redisTemplate.delete("RT:" + authentication.getName());
+            redisTemplate.delete("RT:" + email);
         }
 
         // 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
         Long expiration = jwtTokenProvider.getExpiration(accessToken);
-        redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("logout:" + email, accessToken, expiration, TimeUnit.MILLISECONDS);
     }
 
 
