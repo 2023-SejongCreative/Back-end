@@ -18,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 
 @EnableWebSecurity
@@ -52,6 +54,7 @@ public class SecurityConfig{
 
                 .authorizeHttpRequests()
                 .requestMatchers("/register", "/login").permitAll()
+                .requestMatchers("/logout").authenticated()
                 .anyRequest().authenticated()
                 .and()
 
@@ -59,7 +62,7 @@ public class SecurityConfig{
                 .and()
 
                 .logout()
-                .logoutSuccessUrl("/login")
+                //.logoutSuccessUrl("/login")
                 .and()
 
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
@@ -74,4 +77,5 @@ public class SecurityConfig{
         //정적 자원에 스프링 시큐리티 필터 규칙을 적용하지 않도록 설정(서버 부하를 줄이도록)
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
+
 }
