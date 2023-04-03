@@ -5,8 +5,10 @@ import com.example.Waffle.dto.UserDto;
 import com.example.Waffle.dto.LoginDto;
 import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.token.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,5 +51,31 @@ public class AuthController {
         userService.login(loginDto, response);
 
         return new ResponseEntity<>("로그인에 성공하였습니다.", HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    @ResponseBody
+    public ResponseEntity<Object> logout(@RequestHeader("Refresh_Token") String refreshToken,
+                                         @RequestHeader("Access_Token") String accessToken) {
+
+        // 헤더에서 JWT 토큰 받아오기
+        //String accessToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Access_Token");
+        //String refreshToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Refresh_Token");
+
+        userService.logout(refreshToken, accessToken, response);
+
+        return new ResponseEntity<>("로그아웃에 성공하였습니다.", HttpStatus.OK);
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<Object> reissue(HttpServletRequest request){
+
+        // 헤더에서 JWT 토큰 받아오기
+        String accessToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Access_Token");
+        String refreshToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "Refresh_Token");
+
+        userService.reissue(refreshToken, accessToken, response);
+
+        return new ResponseEntity<>("엑세스 토큰 재발급이 되었습니다.", HttpStatus.OK);
     }
 }
