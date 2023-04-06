@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Getter
 @Entity
 @NoArgsConstructor
@@ -29,6 +31,10 @@ public class UserEntity {
 
      @Column(name = "img_name")
      private String imgName;
+
+     @OneToMany(mappedBy = "user")
+     private List<UserRoomEntity> userRoom;
+
 
      @Builder
     public UserEntity(String email, String password, String name){
