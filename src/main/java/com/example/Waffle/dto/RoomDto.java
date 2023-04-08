@@ -1,6 +1,8 @@
 package com.example.Waffle.dto;
 
 
+import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.RoomEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,5 +16,15 @@ public class RoomDto {
     public RoomDto(String name, int type){
         this.name = name;
         this.type = type;
+    }
+
+    public RoomEntity toEntity(GroupEntity groupId){
+        RoomEntity roomEntity = new RoomEntity().builder()
+                .name(name)
+                .type(type)
+                .groupId(groupId)
+                .build();
+
+        return roomEntity;
     }
 }
