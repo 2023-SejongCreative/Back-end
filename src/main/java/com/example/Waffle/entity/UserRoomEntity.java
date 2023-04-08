@@ -22,6 +22,7 @@ public class UserRoomEntity {
     @JoinColumn(name = "room_id")
     private RoomEntity room;
 
+    //관리자이면(1) 아니면(0)
     private int manager;
 
     @Builder

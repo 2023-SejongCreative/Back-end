@@ -2,13 +2,17 @@ package com.example.Waffle.service;
 
 
 import com.example.Waffle.dto.RoomDto;
+import com.example.Waffle.dto.UserRoomDto;
 import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
+import com.example.Waffle.entity.UserRoomEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import com.example.Waffle.repository.GroupRepository;
 import com.example.Waffle.repository.RoomRepository;
 import com.example.Waffle.repository.UserRepository;
+import com.example.Waffle.repository.UserRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,7 @@ public class RoomService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final RoomRepository roomRepository;
+    private final UserRoomRepository userRoomRepository;
 
     @Transactional
     public void createRoom(RoomDto roomDto, String email, int groupId){
@@ -35,10 +40,13 @@ public class RoomService {
         );
 
         //room 정보 db에 저장
-        roomRepository.save(roomDto.toEntity(groupEntity));
+        RoomEntity roomEntity = roomDto.toEntity(groupEntity);
+        roomRepository.save(roomEntity);
 
-
-
+        //user_room mapping table에 정보 저장
+        UserRoomDto userRoomDto = new UserRoomDto(userEntity, roomEntity, 1);
+        UserRoomEntity userRoomEntity = userRoomDto.toEntity();
+        userRoomRepository.save(userRoomEntity);
 
     }
 }
