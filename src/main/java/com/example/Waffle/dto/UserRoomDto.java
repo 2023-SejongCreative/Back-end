@@ -2,7 +2,7 @@ package com.example.Waffle.dto;
 
 import com.example.Waffle.entity.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.entity.UserRoomEntity;
+import com.example.Waffle.entity.UserRoom.UserRoomEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -6,7 +6,7 @@ import com.example.Waffle.dto.UserRoomDto;
 import com.example.Waffle.entity.GroupEntity;
 import com.example.Waffle.entity.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.entity.UserRoomEntity;
+import com.example.Waffle.entity.UserRoom.UserRoomEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import com.example.Waffle.repository.GroupRepository;
@@ -41,12 +41,12 @@ public class RoomService {
 
         //room 정보 db에 저장
         RoomEntity roomEntity = roomDto.toEntity(groupEntity);
-        roomRepository.save(roomEntity);
+        this.roomRepository.save(roomEntity);
 
         //user_room mapping table에 정보 저장
         UserRoomDto userRoomDto = new UserRoomDto(userEntity, roomEntity, 1);
         UserRoomEntity userRoomEntity = userRoomDto.toEntity();
-        userRoomRepository.save(userRoomEntity);
+        this.userRoomRepository.save(userRoomEntity);
 
     }
 }

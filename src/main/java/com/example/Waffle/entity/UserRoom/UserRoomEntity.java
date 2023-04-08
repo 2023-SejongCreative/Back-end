@@ -1,5 +1,7 @@
-package com.example.Waffle.entity;
+package com.example.Waffle.entity.UserRoom;
 
+import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +11,7 @@ import org.apache.catalina.User;
 @Getter
 @Entity
 @NoArgsConstructor
+@IdClass(UserRoomPK.class)
 @Table(name = "user_room")
 public class UserRoomEntity {
 
