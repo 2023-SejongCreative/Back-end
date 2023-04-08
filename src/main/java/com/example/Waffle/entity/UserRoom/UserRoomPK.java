@@ -10,7 +10,6 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 public class UserRoomPK implements Serializable {
-
-    private String user;
-    private String room;
+    private UserEntity user;
+    private RoomEntity room;
 }
