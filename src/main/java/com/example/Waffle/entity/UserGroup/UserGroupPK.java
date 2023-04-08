@@ -1,5 +1,7 @@
 package com.example.Waffle.entity.UserGroup;
 
+import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.UserEntity;
 import jakarta.persistence.IdClass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +13,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserGroupPK implements Serializable {
-    private String user;
-    private String group;
+    private UserEntity user;
+    private GroupEntity group;
 }

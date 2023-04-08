@@ -35,7 +35,7 @@ public class RoomService {
         );
 
         //email로 user 정보 찾기
-        UserEntity userEntity = userRepository.findById(email).orElseThrow(
+        UserEntity userEntity = userRepository.findByemail(email).orElseThrow(
                 () -> new UserException(ErrorCode.NO_USER)
         );
 
