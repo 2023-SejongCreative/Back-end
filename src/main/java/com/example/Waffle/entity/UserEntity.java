@@ -35,6 +35,10 @@ public class UserEntity {
 
      @OneToMany(mappedBy = "user")
      private List<UserGroupEntity> userGroup = new ArrayList<>();
+     
+     @OneToMany(mappedBy = "user")
+     private List<UserRoomEntity> userRoom = new ArrayList<>();
+
 
      @Builder
     public UserEntity(String email, String password, String name){
