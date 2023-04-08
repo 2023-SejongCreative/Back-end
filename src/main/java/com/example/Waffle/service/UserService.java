@@ -103,11 +103,11 @@ public class UserService {
             throw new UserException(ErrorCode.UNAUTHORIZED);
         }
 
-        // 토큰으로부터 유저 정보를 받아서 저장
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        // Access Token 에서 User email 을 가져오기
+        String email = jwtTokenProvider.getEmail(accessToken);
 
         // Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
-        String redisRefreshToken = (String)redisTemplate.opsForValue().get("RT:" + authentication.getName());
+        String redisRefreshToken = (String)redisTemplate.opsForValue().get("RT:" + email);
 
         // 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우
         if(ObjectUtils.isEmpty(refreshToken)) {
@@ -118,11 +118,11 @@ public class UserService {
         }
 
         //새로운 ATK, RTK 모두 발급
-        TokenDto tokenDto = jwtTokenProvider.createAllToken(authentication.getName());
+        TokenDto tokenDto = jwtTokenProvider.createAllToken(email);
 
         // RefreshToken Redis 업데이트
         redisTemplate.opsForValue()
-                .set("RT:" + authentication.getName(), tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+                .set("RT:" + email, tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         // response 헤더에 Access Token / Refresh Token 넣음
         setHeader(response, tokenDto);

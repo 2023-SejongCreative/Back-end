@@ -68,11 +68,12 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<Object> reissue(HttpServletRequest request){
+    public ResponseEntity<Object> reissue(@RequestHeader("refresh_token") String refreshToken,
+                                          @RequestHeader("access_token") String accessToken){
 
-        // 헤더에서 JWT 토큰 받아오기
-        String accessToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "access_token");
-        String refreshToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "refresh_token");
+//        // 헤더에서 JWT 토큰 받아오기
+//        String accessToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "access_token");
+//        String refreshToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "refresh_token");
 
         userService.reissue(refreshToken, accessToken, response);
 
