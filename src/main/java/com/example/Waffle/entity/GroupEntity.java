@@ -20,6 +20,9 @@ public class GroupEntity {
     @OneToMany(mappedBy = "group")
     private List<UserGroupEntity> userGroup = new ArrayList<>();
 
+    @OneToMany(mappedBy = "groupId")
+    private List<RoomEntity> room = new ArrayList<>();
+
     @Column(name = "name")
     private String name;
 
