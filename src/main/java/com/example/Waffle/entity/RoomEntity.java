@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,13 +27,13 @@ public class RoomEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
-    private int groupId;
+    private GroupEntity groupId;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
-    private List<UserRoomEntity> userRoom;
+    private List<UserRoomEntity> userRoom = new ArrayList<>();
 
     @Builder
-    public RoomEntity(String name, int type, int groupId){
+    public RoomEntity(String name, int type, GroupEntity groupId){
         this.name = name;
         this.type = type;
         this.groupId = groupId;
