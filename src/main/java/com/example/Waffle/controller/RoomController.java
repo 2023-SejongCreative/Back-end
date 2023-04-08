@@ -1,6 +1,7 @@
 package com.example.Waffle.controller;
 
 import com.example.Waffle.dto.RoomDto;
+import com.example.Waffle.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,18 +15,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RoomController {
 
+    private final RoomService roomService;
+
     @PostMapping("/{group_id}/createroom")
     public ResponseEntity<String> createRoom(@PathVariable("group_id") Integer groupId,
                                              @RequestBody Map<String, String> param){
 
-    RoomDto roomDto = new RoomDto(param.get("room_name"),
+        RoomDto roomDto = new RoomDto(param.get("room_name"),
             Integer.parseInt(param.get("type")));
 
-    String email = param.get("email");
+        String email = param.get("email");
 
-
-
-
+        roomService.createRoom(roomDto, email, groupId);
 
         return ResponseEntity.ok("룸 생성에 성공하였습니다");
     }

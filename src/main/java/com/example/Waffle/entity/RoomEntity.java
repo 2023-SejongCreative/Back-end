@@ -1,6 +1,7 @@
 package com.example.Waffle.entity;
 
 
+import com.example.Waffle.entity.UserRoom.UserRoomEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +30,8 @@ public class RoomEntity {
     private GroupEntity groupId;
 
     @OneToMany(mappedBy = "room")
-    private List<UserRoomEntity> userRoom  = new ArrayList<>();
+    private List<UserRoomEntity> userRoom = new ArrayList<>();
+
 
     @Builder
     public RoomEntity(String name, int type, GroupEntity groupId){

@@ -1,7 +1,10 @@
-package com.example.Waffle.entity;
+package com.example.Waffle.entity.UserRoom;
 
+import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.catalina.User;
@@ -9,6 +12,8 @@ import org.apache.catalina.User;
 @Getter
 @Entity
 @NoArgsConstructor
+@IdClass(UserRoomPK.class)
+@Data
 @Table(name = "user_room")
 public class UserRoomEntity {
 
@@ -22,6 +27,7 @@ public class UserRoomEntity {
     @JoinColumn(name = "room_id")
     private RoomEntity room;
 
+    //관리자이면(1) 아니면(0)
     private int manager;
 
     @Builder
