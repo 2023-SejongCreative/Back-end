@@ -24,10 +24,10 @@ public class RoomEntity {
     private int type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "group_id")
+    @JoinColumn(name = "group_id")
     private int groupId;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<UserRoomEntity> userRoom;
 
     @Builder
