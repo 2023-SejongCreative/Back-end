@@ -11,6 +11,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserRoomPK implements Serializable {
 
-    private UserEntity user;
-    private RoomEntity room;
+    private String user;
+    private String room;
 }
