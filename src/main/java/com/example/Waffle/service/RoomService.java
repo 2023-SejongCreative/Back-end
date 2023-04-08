@@ -7,6 +7,7 @@ import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import com.example.Waffle.repository.GroupRepository;
+import com.example.Waffle.repository.RoomRepository;
 import com.example.Waffle.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class RoomService {
 
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final RoomRepository roomRepository;
 
     @Transactional
     public void createRoom(RoomDto roomDto, String email, int groupId){
@@ -32,6 +34,8 @@ public class RoomService {
                 () -> new UserException(ErrorCode.NO_USER)
         );
 
+        //room 정보 db에 저장
+        roomRepository.save(roomDto.toEntity(groupEntity));
 
 
 
