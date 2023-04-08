@@ -1,5 +1,6 @@
 package com.example.Waffle.entity;
 
+import com.example.Waffle.entity.UserGroup.UserGroupEntity;
 import com.example.Waffle.entity.UserRoom.UserRoomEntity;
 import jakarta.persistence.*;
 import lombok.Builder;

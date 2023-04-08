@@ -1,5 +1,6 @@
 package com.example.Waffle.entity;
 
+import com.example.Waffle.entity.UserGroup.UserGroupEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,14 +18,14 @@ public class GroupEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
     @OneToMany(mappedBy = "group")
     private List<UserGroupEntity> userGroup = new ArrayList<>();
 
     @OneToMany(mappedBy = "groupId")
     private List<RoomEntity> room = new ArrayList<>();
 
-    @Column(name = "name")
-    private String name;
 
 
     @Builder
