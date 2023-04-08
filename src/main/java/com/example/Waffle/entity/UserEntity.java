@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -33,7 +34,10 @@ public class UserEntity {
      private String imgName;
 
      @OneToMany(mappedBy = "user")
-     private List<UserRoomEntity> userRoom;
+     private List<UserGroupEntity> userGroup = new ArrayList<>();
+     
+     @OneToMany(mappedBy = "user")
+     private List<UserRoomEntity> userRoom = new ArrayList<>();
 
 
      @Builder
