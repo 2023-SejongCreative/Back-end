@@ -108,4 +108,24 @@ public class RoomService {
 
         return roomList.toString();
     }
+
+    @Transactional
+    public void inviteUser(int roomId, String email){
+
+        //email로 user 정보 찾기
+        UserEntity userEntity = userRepository.findByemail(email).orElseThrow(
+                () -> new UserException(ErrorCode.NO_USER)
+        );
+
+        //roomId로 room 정보 찾기
+        RoomEntity roomEntity = roomRepository.findById(roomId).orElseThrow(
+                () -> new UserException(ErrorCode.NO_ROOM)
+        );
+
+        //user_room mapping table에 정보 저장
+        UserRoomDto userRoomDto = new UserRoomDto(userEntity, roomEntity, 0);
+        UserRoomEntity userRoomEntity = userRoomDto.toEntity();
+        this.userRoomRepository.save(userRoomEntity);
+
+    }
 }

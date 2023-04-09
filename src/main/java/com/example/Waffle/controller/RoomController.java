@@ -43,4 +43,16 @@ public class RoomController {
 
         return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
+
+    @PostMapping("/{room_id}/invite")
+    @ResponseBody
+    public ResponseEntity<Object> inviteUser(@PathVariable("room_id") int roomId,
+                                             @RequestBody Map<String, String> param){
+
+        String email = param.get("email");
+
+        roomService.inviteUser(roomId, email);
+
+        return new ResponseEntity<>("룸에 사용자 추가 성공하였습니다.", HttpStatus.OK);
+    }
 }
