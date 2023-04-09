@@ -55,4 +55,13 @@ public class RoomController {
 
         return new ResponseEntity<>("룸에 " + email + "을 추가하였습니다.", HttpStatus.OK);
     }
+
+    @DeleteMapping("/{room_id}/deleteroom")
+    @ResponseBody
+    public ResponseEntity<Object> deleteRoom(@PathVariable("room_id") int roomId){
+
+        roomService.deleteRoom(roomId);
+
+        return new ResponseEntity<>("룸 삭제에 성공하였습니다.", HttpStatus.OK);
+    }
 }

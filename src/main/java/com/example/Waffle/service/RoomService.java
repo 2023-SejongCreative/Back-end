@@ -136,4 +136,23 @@ public class RoomService {
         }
 
     }
+
+    @Transactional
+    public void deleteRoom(int roomId){
+
+        try {
+            //roomId로 room 정보 찾기
+            RoomEntity roomEntity = roomRepository.findById(roomId).orElseThrow(
+                    () -> new UserException(ErrorCode.NO_ROOM)
+            );
+
+            userRoomRepository.deleteByRoomId(roomEntity.getId());
+
+            roomRepository.deleteById(roomEntity.getId());
+
+        }catch(Exception e){
+            throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+        }
+
+    }
 }
