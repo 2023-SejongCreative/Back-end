@@ -3,11 +3,12 @@ package com.example.Waffle.controller;
 import com.example.Waffle.dto.RoomDto;
 import com.example.Waffle.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping("/{group_id}/createroom")
-    public ResponseEntity<String> createRoom(@PathVariable("group_id") Integer groupId,
+    public ResponseEntity<Object> createRoom(@PathVariable("group_id") Integer groupId,
                                              @RequestBody Map<String, String> param){
 
         RoomDto roomDto = new RoomDto(param.get("room_name"),
@@ -28,6 +29,18 @@ public class RoomController {
 
         roomService.createRoom(roomDto, email, groupId);
 
-        return ResponseEntity.ok("룸 생성에 성공하였습니다");
+        return new ResponseEntity<>("룸 생성에 성공하였습니다", HttpStatus.OK);
+    }
+
+    @GetMapping("/{group_id}/rooms")
+    @ResponseBody
+    public ResponseEntity<Object> roomList(@PathVariable("group_id") int groupId,
+                                           @RequestBody Map<String, String> param){
+
+        String email = param.get("email");
+
+        String roomList = roomService.roomList(email, groupId);
+
+        return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
 }

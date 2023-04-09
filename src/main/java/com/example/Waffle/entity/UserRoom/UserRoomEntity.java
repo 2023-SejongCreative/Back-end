@@ -13,7 +13,6 @@ import org.apache.catalina.User;
 @Entity
 @NoArgsConstructor
 @IdClass(UserRoomPK.class)
-@Data
 @Table(name = "user_room")
 public class UserRoomEntity {
 
