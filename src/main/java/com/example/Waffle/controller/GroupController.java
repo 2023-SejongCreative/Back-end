@@ -27,11 +27,20 @@ public class GroupController {
     }
 
     @GetMapping("/{user_email}/groups")
-    public @ResponseBody ResponseEntity<Object> grouplist(@PathVariable("user_email") String email){
+    public @ResponseBody ResponseEntity<Object> groupList(@PathVariable("user_email") String email){
 
-        String groupList = groupService.userGrouplist(email);
+        String groupList = groupService.userGroupList(email);
 
         return new ResponseEntity<>(groupList, HttpStatus.OK);
+    }
+
+    @PostMapping("{group_id}/invite")
+    public ResponseEntity<Object> inviteUser(@PathVariable("group_id") int groupId,
+                                             @RequestBody Map<String, String> param){
+
+        groupService.inviteUser(groupId, param.get("email"));
+
+        return new ResponseEntity<>("그룹에" + param.get("email") + "을 추가하였습니다.", HttpStatus.OK);
     }
 
 

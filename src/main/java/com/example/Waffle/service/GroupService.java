@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class GroupService {
     }
 
     @Transactional
-    public String userGrouplist(String email){
+    public String userGroupList(String email){
         UserEntity userEntity = userRepository.findByemail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
 
@@ -63,6 +62,20 @@ public class GroupService {
             throw new UserException(ErrorCode.CANT_FINDGROUP);
         }
         return groupList.toString();
+    }
+
+    @Transactional
+    public void inviteUser(int groupId, String email){
+
+        UserEntity userEntity = userRepository.findByemail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
+
+        GroupEntity groupEntity = groupRepository.findById(groupId)
+                .orElseThrow(() -> new UserException(ErrorCode.CANT_FINDGROUP));
+
+        UserGroupDto userGroupDto = new UserGroupDto(userEntity, groupEntity, 0);
+        userGroupRepository.save(userGroupDto.toEntity());
+
     }
 
 
