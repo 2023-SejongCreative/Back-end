@@ -68,6 +68,7 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
+    @ResponseBody
     public ResponseEntity<Object> reissue(@RequestHeader("refresh_token") String refreshToken,
                                           @RequestHeader("access_token") String accessToken){
 

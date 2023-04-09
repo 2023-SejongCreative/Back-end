@@ -49,4 +49,14 @@ public class RoomService {
         this.userRoomRepository.save(userRoomEntity);
 
     }
+
+    public void roomList(int groupId){
+
+        //groupId로 group 정보 찾기
+        GroupEntity groupEntity = groupRepository.findById(groupId).orElseThrow(
+                () -> new UserException(ErrorCode.NO_GROUP)
+        );
+
+
+    }
 }
