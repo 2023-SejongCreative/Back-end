@@ -34,7 +34,7 @@ public class GroupController {
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
-    @PostMapping("{group_id}/invite")
+    @PostMapping("{group_id}/invitegroup")
     public ResponseEntity<Object> inviteUser(@PathVariable("group_id") int groupId,
                                              @RequestBody Map<String, String> param){
 

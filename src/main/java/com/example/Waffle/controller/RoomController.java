@@ -44,7 +44,7 @@ public class RoomController {
         return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
 
-    @PostMapping("/{room_id}/invite")
+    @PostMapping("/{room_id}/inviteroom")
     @ResponseBody
     public ResponseEntity<Object> inviteUser(@PathVariable("room_id") int roomId,
                                              @RequestBody Map<String, String> param){
