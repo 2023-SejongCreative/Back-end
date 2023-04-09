@@ -122,10 +122,18 @@ public class RoomService {
                 () -> new UserException(ErrorCode.NO_ROOM)
         );
 
-        //user_room mapping table에 정보 저장
-        UserRoomDto userRoomDto = new UserRoomDto(userEntity, roomEntity, 0);
-        UserRoomEntity userRoomEntity = userRoomDto.toEntity();
-        this.userRoomRepository.save(userRoomEntity);
+
+        //UserRoom에서 사용자가 해당 룸에 초대된 사람인지 조회
+        Optional<UserRoomEntity> userRoom = userRoomRepository.findByUserIdAndRoomId(userEntity.getId(), roomEntity.getId());
+        if(userRoom.isPresent()){ //초대되었으면
+            throw new UserException(ErrorCode.DUPLICATE_ROOM_USER);
+        }
+        else{ //초대 안되었으면
+            //user_room mapping table에 정보 저장
+            UserRoomDto userRoomDto = new UserRoomDto(userEntity, roomEntity, 0);
+            UserRoomEntity userRoomEntity = userRoomDto.toEntity();
+            this.userRoomRepository.save(userRoomEntity);
+        }
 
     }
 }

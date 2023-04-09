@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface UserGroupRepository extends JpaRepository<UserGroupEntity, UserGroupPK> {
 
     List<UserGroupEntity> findByUserId(Long userId);
+
+    Optional<UserGroupEntity> findByUserIdAndGroupId(Long userId, Long groupId);
 }

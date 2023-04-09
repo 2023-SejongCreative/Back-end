@@ -34,13 +34,14 @@ public class GroupController {
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
-    @PostMapping("{group_id}/invite")
+    @PostMapping("{group_id}/invitegroup")
     public ResponseEntity<Object> inviteUser(@PathVariable("group_id") int groupId,
                                              @RequestBody Map<String, String> param){
 
-        groupService.inviteUser(groupId, param.get("email"));
+        String email = param.get("email");
+        groupService.inviteUser(groupId, email);
 
-        return new ResponseEntity<>("그룹에" + param.get("email") + "을 추가하였습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("그룹에" + email + "을 추가하였습니다.", HttpStatus.OK);
     }
 
 

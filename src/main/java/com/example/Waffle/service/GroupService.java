@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -71,10 +72,17 @@ public class GroupService {
                 .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
 
         GroupEntity groupEntity = groupRepository.findById(groupId)
-                .orElseThrow(() -> new UserException(ErrorCode.CANT_FINDGROUP));
+                .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
 
-        UserGroupDto userGroupDto = new UserGroupDto(userEntity, groupEntity, 0);
-        userGroupRepository.save(userGroupDto.toEntity());
+
+        Optional<UserGroupEntity> userGroupEntity = userGroupRepository.findByUserIdAndGroupId(userEntity.getId(), groupEntity.getId());
+        if(userGroupEntity.isPresent()){
+            throw new UserException(ErrorCode.DUPLICATE_GROUP_USER);
+        }
+        else{
+            UserGroupDto userGroupDto = new UserGroupDto(userEntity, groupEntity, 0);
+            userGroupRepository.save(userGroupDto.toEntity());
+        }
 
     }
 
