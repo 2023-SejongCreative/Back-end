@@ -14,8 +14,12 @@ import com.example.Waffle.repository.RoomRepository;
 import com.example.Waffle.repository.UserRepository;
 import com.example.Waffle.repository.UserRoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,12 +54,35 @@ public class RoomService {
 
     }
 
-    public void roomList(int groupId){
+    @Transactional
+    public List<RoomEntity> getRooms(int groupId){
+        return roomRepository.findAllByGroupId(groupId);
+    }
 
-        //groupId로 group 정보 찾기
-        GroupEntity groupEntity = groupRepository.findById(groupId).orElseThrow(
-                () -> new UserException(ErrorCode.NO_GROUP)
+    public void roomList(String email, int groupId){
+
+        //email로 user 정보 찾기
+        UserEntity userEntity = userRepository.findByemail(email).orElseThrow(
+                () -> new UserException(ErrorCode.NO_USER)
         );
+
+        JSONObject roomList = new JSONObject();
+        try{
+            JSONArray roomArr = new JSONArray();
+//            for(){
+//                JSONObject room = new JSONObject();
+//                room.put("room_name", );
+//                room.put("room_id", );
+//                room.put("manager", );
+//                room.put("type", );
+//                room.put("include", );
+//                roomArr.put(room);
+//            }
+            roomList.put("room", roomArr);
+
+        }catch(Exception e){
+
+        }
 
 
     }

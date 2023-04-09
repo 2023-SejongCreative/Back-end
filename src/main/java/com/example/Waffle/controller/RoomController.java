@@ -32,7 +32,10 @@ public class RoomController {
 
     @GetMapping("/{group_id}/rooms")
     @ResponseBody
-    public ResponseEntity<Object> roomList(@PathVariable("group_id") Integer groupId){
+    public ResponseEntity<Object> roomList(@PathVariable("group_id") Integer groupId,
+                                           @RequestBody Map<String, String> param){
+
+        String email = param.get("email");
 
 
 
