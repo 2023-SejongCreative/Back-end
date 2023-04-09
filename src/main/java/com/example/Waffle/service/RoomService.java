@@ -13,6 +13,7 @@ import com.example.Waffle.repository.GroupRepository;
 import com.example.Waffle.repository.RoomRepository;
 import com.example.Waffle.repository.UserRepository;
 import com.example.Waffle.repository.UserRoomRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,21 +57,26 @@ public class RoomService {
     }
 
     @Transactional
-    public List<RoomEntity> getRooms(Long groupId){
-        return roomRepository.findAllByGroupId(groupId);
+    public List<RoomEntity> getRooms(GroupEntity groupEntity){
+        return roomRepository.findAllByGroupId(groupEntity);
     }
 
-    public void roomList(String email, Long groupId){
+    public String roomList(String email, int groupId){
 
         //email로 user 정보 찾기
         UserEntity userEntity = userRepository.findByemail(email).orElseThrow(
                 () -> new UserException(ErrorCode.NO_USER)
         );
 
+        //groupId로 group 정보 찾기
+        GroupEntity groupEntity = groupRepository.findById(groupId).orElseThrow(
+                () -> new UserException(ErrorCode.NO_GROUP)
+        );
+
         JSONObject roomList = new JSONObject();
         try{
             //groupId로 해당 group의 룸 조회
-            List<RoomEntity> roomEntities = getRooms(groupId);
+            List<RoomEntity> roomEntities = getRooms(groupEntity);
 
             JSONArray roomArr = new JSONArray();
 
@@ -83,14 +89,14 @@ public class RoomService {
                 room.put("type", roomEntity.getType());
 
                 //UserRoom에서 사용자가 해당 룸에 초대된 사람인지 조회
-                Optional<UserRoomEntity> userRoomEntity = userRoomRepository.findByEmailAndRoomId(email, roomEntity.getId());
+                Optional<UserRoomEntity> userRoomEntity = userRoomRepository.findByUserIdAndRoomId(userEntity.getId(), roomEntity.getId());
                 if(userRoomEntity.isPresent()){ //초대되었으면
                     room.put("manager", userRoomEntity.get().getManager());
                     room.put("include", 1);
                 }
                 else{ //초대 되지 않았으면
                     room.put("manager", 0);
-                    room.put("include", 1);
+                    room.put("include", 0);
                 }
                 roomArr.put(room);
             }
@@ -100,5 +106,6 @@ public class RoomService {
             throw new UserException(ErrorCode.CANT_FINDROOM);
         }
 
+        return roomList.toString();
     }
 }

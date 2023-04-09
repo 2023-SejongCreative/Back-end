@@ -3,6 +3,8 @@ package com.example.Waffle.controller;
 import com.example.Waffle.dto.RoomDto;
 import com.example.Waffle.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,13 +34,13 @@ public class RoomController {
 
     @GetMapping("/{group_id}/rooms")
     @ResponseBody
-    public ResponseEntity<Object> roomList(@PathVariable("group_id") Integer groupId,
+    public ResponseEntity<Object> roomList(@PathVariable("group_id") int groupId,
                                            @RequestBody Map<String, String> param){
 
         String email = param.get("email");
 
+        String roomList = roomService.roomList(email, groupId);
 
-
-        return new ResponseEntity<>("룸 목록을 불러오는데 성공했습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
 }

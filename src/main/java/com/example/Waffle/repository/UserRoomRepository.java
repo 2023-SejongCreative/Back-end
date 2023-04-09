@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface UserRoomRepository extends JpaRepository<UserRoomEntity, UserRoomPK> {
 
-    Optional<UserRoomEntity> findByEmailAndRoomId(String email, Long roomId);
+    Optional<UserRoomEntity> findByUserIdAndRoomId(Long userId, Long roomId);
 }
