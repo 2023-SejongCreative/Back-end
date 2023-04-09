@@ -53,6 +53,6 @@ public class RoomController {
 
         roomService.inviteUser(roomId, email);
 
-        return new ResponseEntity<>("룸에 사용자 추가 성공하였습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("룸에 " + email + "을 추가하였습니다.", HttpStatus.OK);
     }
 }
