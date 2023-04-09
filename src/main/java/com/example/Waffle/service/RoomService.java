@@ -138,7 +138,7 @@ public class RoomService {
     }
 
     @Transactional
-    public void deleteRoom(int roomId){
+    public void deleteRoom(Long roomId){
 
         try {
             //roomId로 room 정보 찾기

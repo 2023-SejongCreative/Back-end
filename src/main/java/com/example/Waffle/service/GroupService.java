@@ -3,6 +3,7 @@ package com.example.Waffle.service;
 import com.example.Waffle.dto.GroupDto;
 import com.example.Waffle.dto.UserGroupDto;
 import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.entity.UserGroup.UserGroupEntity;
 import com.example.Waffle.exception.ErrorCode;
@@ -25,6 +26,7 @@ public class GroupService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
+    private final RoomService roomService;
     @Transactional
     public void createGroup(String email, GroupDto groupDto){
 
@@ -90,8 +92,22 @@ public class GroupService {
     @Transactional
     public void deleteGroup(int groupId){
 
-        userGroupRepository.deleteByGroupId(groupId);
-        groupRepository.deleteById(groupId);
+        try {
+            GroupEntity groupEntity = groupRepository.findById(groupId)
+                    .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
+
+            List<RoomEntity> roomEntities = roomService.getRooms(groupEntity);
+
+            for (RoomEntity roomEntity : roomEntities) {
+                roomService.deleteRoom(roomEntity.getId());
+            }
+
+            userGroupRepository.deleteByGroupId(groupId);
+            groupRepository.deleteById(groupId);
+
+        }catch(Exception e){
+            throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+        }
 
     }
 
