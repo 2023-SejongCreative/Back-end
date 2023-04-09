@@ -71,7 +71,7 @@ public class GroupService {
                 .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
 
         GroupEntity groupEntity = groupRepository.findById(groupId)
-                .orElseThrow(() -> new UserException(ErrorCode.CANT_FINDGROUP));
+                .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
 
         UserGroupDto userGroupDto = new UserGroupDto(userEntity, groupEntity, 0);
         userGroupRepository.save(userGroupDto.toEntity());
