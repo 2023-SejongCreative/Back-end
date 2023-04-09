@@ -13,6 +13,7 @@ public enum ErrorCode {
     NO_PASSWORD(HttpStatus.BAD_REQUEST, "LOGIN-002", "비밀번호가 일치하지 않습니다."),
     EXPIRATION_ATK(HttpStatus.BAD_REQUEST, "LOGOUT-001", "엑세스 토큰이 만료되없습니다."),
     NO_GROUP(HttpStatus.BAD_REQUEST, "GROUP-001", "일치하는 그룹을 찾을 수 없습니다."),
+    CANT_FINDGROUP(HttpStatus.BAD_REQUEST, "GROUP-002", "그룹 목록을 조회할 수 없습니다."),
     CANT_FINDROOM(HttpStatus.BAD_REQUEST, "ROOOM-001", "룸 목록을 조회할 수 없습니다."),
 
     /*401 UNAUTHROIZED : 인증 안됨*/

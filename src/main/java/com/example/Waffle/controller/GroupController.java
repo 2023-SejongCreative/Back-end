@@ -27,8 +27,11 @@ public class GroupController {
     }
 
     @GetMapping("/{user_email}/groups")
-    public @ResponseBody String grouplist(@PathVariable("user_email") String email){
-        return groupService.userGrouplist(email);
+    public @ResponseBody ResponseEntity<Object> grouplist(@PathVariable("user_email") String email){
+
+        String groupList = groupService.userGrouplist(email);
+
+        return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
 
