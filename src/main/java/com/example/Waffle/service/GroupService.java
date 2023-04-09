@@ -46,23 +46,23 @@ public class GroupService {
                 .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
 
 
-        JSONObject result = new JSONObject();
+        JSONObject groupList = new JSONObject();
         try{
             List<UserGroupEntity> userGroupEntities = userGroupRepository.findByUserId(userEntity.getId());
-            JSONArray jsonArr = new JSONArray();
+            JSONArray groupArr = new JSONArray();
             for(UserGroupEntity userGroupEntity : userGroupEntities){
-                JSONObject json = new JSONObject();
+                JSONObject group = new JSONObject();
                 GroupEntity groupEntity = userGroupEntity.getGroup();
-                json.put("group_name", groupEntity.getName());
-                json.put("group_id", groupEntity.getId());
-                json.put("manager", userGroupEntity.getManager());
-                jsonArr.put(json);
+                group.put("group_name", groupEntity.getName());
+                group.put("group_id", groupEntity.getId());
+                group.put("manager", userGroupEntity.getManager());
+                groupArr.put(group);
             }
-            result.put("groups", jsonArr);
+            groupList.put("groups", groupArr);
         }catch (Exception e){
-            e.printStackTrace();
+            throw new UserException(ErrorCode.CANT_FINDGROUP);
         }
-        return result.toString();
+        return groupList.toString();
     }
 
 
