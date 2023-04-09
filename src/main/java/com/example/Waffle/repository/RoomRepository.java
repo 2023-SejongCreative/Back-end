@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
 
-    List<RoomEntity> findAllByGroupId(int groupId);
+    List<RoomEntity> findAllByGroupId(Long groupId);
 }

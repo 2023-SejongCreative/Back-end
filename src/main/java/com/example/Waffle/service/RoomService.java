@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,11 +56,11 @@ public class RoomService {
     }
 
     @Transactional
-    public List<RoomEntity> getRooms(int groupId){
+    public List<RoomEntity> getRooms(Long groupId){
         return roomRepository.findAllByGroupId(groupId);
     }
 
-    public void roomList(String email, int groupId){
+    public void roomList(String email, Long groupId){
 
         //email로 user 정보 찾기
         UserEntity userEntity = userRepository.findByemail(email).orElseThrow(
@@ -68,22 +69,36 @@ public class RoomService {
 
         JSONObject roomList = new JSONObject();
         try{
+            //groupId로 해당 group의 룸 조회
+            List<RoomEntity> roomEntities = getRooms(groupId);
+
             JSONArray roomArr = new JSONArray();
-//            for(){
-//                JSONObject room = new JSONObject();
-//                room.put("room_name", );
-//                room.put("room_id", );
-//                room.put("manager", );
-//                room.put("type", );
-//                room.put("include", );
-//                roomArr.put(room);
-//            }
+
+            //룸 목록 JSON 객체에 저장
+            for(RoomEntity roomEntity : roomEntities){
+                JSONObject room = new JSONObject();
+
+                room.put("room_name", roomEntity.getName());
+                room.put("room_id", roomEntity.getId());
+                room.put("type", roomEntity.getType());
+
+                //UserRoom에서 사용자가 해당 룸에 초대된 사람인지 조회
+                Optional<UserRoomEntity> userRoomEntity = userRoomRepository.findByEmailAndRoomId(email, roomEntity.getId());
+                if(userRoomEntity.isPresent()){ //초대되었으면
+                    room.put("manager", userRoomEntity.get().getManager());
+                    room.put("include", 1);
+                }
+                else{ //초대 되지 않았으면
+                    room.put("manager", 0);
+                    room.put("include", 1);
+                }
+                roomArr.put(room);
+            }
             roomList.put("room", roomArr);
 
         }catch(Exception e){
-
+            throw new UserException(ErrorCode.CANT_FINDROOM);
         }
-
 
     }
 }
