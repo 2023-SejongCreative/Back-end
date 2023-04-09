@@ -84,6 +84,15 @@ public class GroupService {
             userGroupRepository.save(userGroupDto.toEntity());
         }
 
+
+    }
+
+    @Transactional
+    public void deleteGroup(int groupId){
+
+        userGroupRepository.deleteByGroupId(groupId);
+        groupRepository.deleteById(groupId);
+
     }
 
 

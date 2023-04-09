@@ -34,7 +34,7 @@ public class GroupController {
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
-    @PostMapping("{group_id}/invitegroup")
+    @PostMapping("/{group_id}/invitegroup")
     public ResponseEntity<Object> inviteUser(@PathVariable("group_id") int groupId,
                                              @RequestBody Map<String, String> param){
 
@@ -44,6 +44,15 @@ public class GroupController {
         return new ResponseEntity<>("그룹에" + email + "을 추가하였습니다.", HttpStatus.OK);
     }
 
+    @DeleteMapping("/{group_id}/deletegroup")
+    public ResponseEntity<Object> deleteGroup(@PathVariable("group_id") int groupId,
+                                              @RequestBody Map<String, String> param){
 
+        //반복문으로 룸 지우기
+
+        groupService.deleteGroup(groupId);
+
+        return new ResponseEntity<>("그룹 삭제에 성공하였습니다.", HttpStatus.OK);
+    }
 
 }
