@@ -20,10 +20,10 @@ public class GroupController {
     public ResponseEntity<Object> createGroup(@RequestBody Map<String, String> param){
         GroupDto groupDto = new GroupDto(param.get("group_name"));
 
-        groupService.createGroup(param.get("email"),groupDto);
+        Long id = groupService.createGroup(param.get("email"),groupDto);
 
 
-        return new ResponseEntity<>("그룹 생성에 성공하였습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     @GetMapping("/{user_email}/groups")
@@ -38,6 +38,7 @@ public class GroupController {
     public ResponseEntity<Object> inviteUser(@PathVariable("group_id") int groupId,
                                              @RequestBody Map<String, String> param){
 
+        System.out.println(groupId);
         String email = param.get("email");
         groupService.inviteUser(groupId, email);
 
@@ -45,8 +46,7 @@ public class GroupController {
     }
 
     @DeleteMapping("/{group_id}/deletegroup")
-    public ResponseEntity<Object> deleteGroup(@PathVariable("group_id") int groupId,
-                                              @RequestBody Map<String, String> param){
+    public ResponseEntity<Object> deleteGroup(@PathVariable("group_id") int groupId){
 
         //반복문으로 룸 지우기
 

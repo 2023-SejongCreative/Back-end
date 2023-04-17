@@ -13,6 +13,7 @@ import com.example.Waffle.repository.GroupRepository;
 import com.example.Waffle.repository.RoomRepository;
 import com.example.Waffle.repository.UserRepository;
 import com.example.Waffle.repository.UserRoomRepository;
+import com.example.Waffle.token.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
@@ -31,9 +32,12 @@ public class RoomService {
     private final GroupRepository groupRepository;
     private final RoomRepository roomRepository;
     private final UserRoomRepository userRoomRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public void createRoom(RoomDto roomDto, String email, int groupId){
+    public Long createRoom(RoomDto roomDto, String accessToken, int groupId){
+        // Access Token 에서 User email 을 가져오기
+        String email = jwtTokenProvider.getEmail(accessToken);
 
         //groupId로 group 정보 찾기
         GroupEntity groupEntity = groupRepository.findById(groupId).orElseThrow(
@@ -54,6 +58,7 @@ public class RoomService {
         UserRoomEntity userRoomEntity = userRoomDto.toEntity();
         this.userRoomRepository.save(userRoomEntity);
 
+        return roomEntity.getId();
     }
 
     @Transactional
@@ -61,7 +66,10 @@ public class RoomService {
         return roomRepository.findAllByGroupId(groupEntity);
     }
 
-    public String roomList(String email, int groupId){
+    public String roomList(String accessToken, int groupId){
+
+        // Access Token 에서 User email 을 가져오기
+        String email = jwtTokenProvider.getEmail(accessToken);
 
         //email로 user 정보 찾기
         UserEntity userEntity = userRepository.findByemail(email).orElseThrow(

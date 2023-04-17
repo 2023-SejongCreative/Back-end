@@ -28,7 +28,7 @@ public class GroupService {
     private final UserGroupRepository userGroupRepository;
     private final RoomService roomService;
     @Transactional
-    public void createGroup(String email, GroupDto groupDto){
+    public Long createGroup(String email, GroupDto groupDto){
 
         UserEntity userEntity = userRepository.findByemail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
@@ -40,6 +40,7 @@ public class GroupService {
         UserGroupDto userGroupDto = new UserGroupDto(userEntity, groupEntity, 1);
         userGroupRepository.save(userGroupDto.toEntity());
 
+        return groupEntity.getId();
     }
 
     @Transactional
