@@ -19,27 +19,27 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping("/{group_id}/createroom")
-    public ResponseEntity<Object> createRoom(@PathVariable("group_id") Integer groupId,
-                                             @RequestBody Map<String, String> param){
+    public ResponseEntity<Object> createRoom(@PathVariable("group_id") int groupId,
+                                             @RequestHeader("access_token") String accessToken,
+                                              @RequestBody Map<String, String> param){
 
         RoomDto roomDto = new RoomDto(param.get("room_name"),
             Integer.parseInt(param.get("type")));
 
-        String email = param.get("email");
+        Long id = roomService.createRoom(roomDto, accessToken, groupId);
 
-        roomService.createRoom(roomDto, email, groupId);
-
-        return new ResponseEntity<>("룸 생성에 성공하였습니다", HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     @GetMapping("/{group_id}/rooms")
     @ResponseBody
     public ResponseEntity<Object> roomList(@PathVariable("group_id") int groupId,
-                                           @RequestBody Map<String, String> param){
+                                           @RequestHeader("access_token") String accessToken){
 
-        String email = param.get("email");
 
-        String roomList = roomService.roomList(email, groupId);
+        System.out.println(groupId);
+
+        String roomList = roomService.roomList(accessToken, groupId);
 
         return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
