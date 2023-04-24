@@ -2,37 +2,41 @@ package com.example.Waffle.controller;
 
 import com.example.Waffle.dto.DmDto;
 import com.example.Waffle.service.DmService;
+import com.example.Waffle.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 public class DmController {
 
-    private DmService dmService;
+    private final DmService dmService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/chat/create")
-    public ResponseEntity<Object> creatChat (@RequestBody Map<String, Object> param){
-        List<Object> email = Arrays.asList(param.get("email"));
-        //email의 갯수
-        Long cnt = email.stream()
-                .filter(e -> e!= null)
-                .count();
+    public ResponseEntity<Object> creatChat (@RequestBody Map<String, List<String>> param,
+                                             @RequestHeader("access_token") String accessToken){
+        List<String> emails;
+        emails = param.get("email");
 
-        int count = cnt.intValue();
+        emails.add(jwtTokenProvider.getEmail(accessToken));
 
-        //List<Object>를 String 으로 변경
-        List<String> emails = email.stream()
-                .map(object -> Objects.toString(object, null))
-                .toList();
+        int count = emails.size();
 
-        DmDto dmDto = new DmDto(param.get("name").toString(), count);
+        String chat_name = param.get("chat_name").get(0);
+
+        DmDto dmDto = new DmDto(chat_name, count);
+        dmDto.setLast_chat("채팅방이 생성되었습니다.");
+        dmDto.setLast_time(LocalDateTime.now());
 
         Long id = dmService.createDm(dmDto, emails);
 
@@ -40,7 +44,15 @@ public class DmController {
     }
 
 
+    @PostMapping("/chat/{chat_id}/invite")
+    public ResponseEntity<Object> inviteUser (@RequestBody Map<String, String> param,
+                                              @PathVariable("chat_id") int dmId){
 
+        String email = param.get("email");
+        dmService.inviteDm(dmId, email);
+
+        return new ResponseEntity<>("채팅방에 " + email + " 을 초대하였습니다.", HttpStatus.OK);
+    }
 
 
 

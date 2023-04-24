@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Table(name="user_dm")
 @IdClass(UserDmPK.class)

@@ -1,6 +1,7 @@
 package com.example.Waffle.service;
 
 import com.example.Waffle.dto.DmDto;
+import com.example.Waffle.dto.UserDmDto;
 import com.example.Waffle.entity.DM.DmEntity;
 import com.example.Waffle.entity.DM.UserDmEntity;
 import com.example.Waffle.entity.UserEntity;
@@ -31,8 +32,6 @@ public class DmService {
         if(dmDto.getCount() > 6)
             new UserException(ErrorCode.TOO_MANY_PEOPLE);
 
-        dmDto.setLast_time(LocalDateTime.now());
-        dmDto.setLast_chat("채팅방 생성");
         DmEntity dmEntity = dmDto.toEntity();
 
         this.dmRepository.save(dmEntity);
@@ -48,5 +47,26 @@ public class DmService {
 
         return dmEntity.getId();
     }
+
+    public void inviteDm(int dmId, String email){
+
+        UserEntity userEntity = userRepository.findByemail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
+
+        DmEntity dmEntity = dmRepository.findById(dmId)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_DM));
+
+        Optional<UserDmEntity> userDmEntity = userDmRepository.findByUserIdAndDmId(userEntity.getId(), dmEntity.getId());
+        if(userDmEntity.isPresent()){
+            throw new UserException(ErrorCode.DUPLICATE_DM_USER);
+        }
+        else{
+            UserDmDto userDmDto = new UserDmDto(userEntity, dmEntity);
+            userDmRepository.save(userDmDto.toEntity());
+        }
+
+
+    }
+
 
 }

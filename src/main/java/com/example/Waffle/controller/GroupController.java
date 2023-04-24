@@ -38,7 +38,7 @@ public class GroupController {
     public ResponseEntity<Object> inviteUser(@PathVariable("group_id") int groupId,
                                              @RequestBody Map<String, String> param){
 
-        System.out.println(groupId);
+
         String email = param.get("email");
         groupService.inviteUser(groupId, email);
 
