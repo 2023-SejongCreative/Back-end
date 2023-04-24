@@ -1,5 +1,6 @@
 package com.example.Waffle.entity;
 
+import com.example.Waffle.entity.DM.MessageEntity;
 import com.example.Waffle.entity.UserGroup.UserGroupEntity;
 import com.example.Waffle.entity.UserRoom.UserRoomEntity;
 import jakarta.persistence.*;
@@ -40,6 +41,9 @@ public class UserEntity {
      
      @OneToMany(mappedBy = "user")
      private List<UserRoomEntity> userRoom = new ArrayList<>();
+
+     @OneToMany(mappedBy = "user")
+     private List<MessageEntity> message = new ArrayList<>();
 
 
      @Builder

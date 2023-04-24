@@ -11,6 +11,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDmPK implements Serializable {
-    private DmEntity dm;
     private UserEntity user;
+    private DmEntity dm;
 }

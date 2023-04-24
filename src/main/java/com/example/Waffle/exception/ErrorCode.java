@@ -17,6 +17,8 @@ public enum ErrorCode {
     CANT_FINDGROUP(HttpStatus.BAD_REQUEST, "GROUP-002", "그룹 목록을 조회할 수 없습니다."),
     CANT_FINDROOM(HttpStatus.BAD_REQUEST, "ROOM-002", "룸 목록을 조회할 수 없습니다."),
 
+    TOO_MANY_PEOPLE(HttpStatus.BAD_REQUEST, "DM-001", "사용자가 너무 많습니다."),
+
     /*401 UNAUTHROIZED : 인증 안됨*/
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-001", "리프레시 토큰이 유효하지 않습니다."),
 

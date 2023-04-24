@@ -1,11 +1,10 @@
 package com.example.Waffle.entity.DM;
 
 
+import com.example.Waffle.entity.GroupEntity;
 import com.example.Waffle.entity.UserEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Table(name="user_dm")
 @IdClass(UserDmPK.class)
@@ -28,10 +28,12 @@ public class UserDmEntity {
     @JoinColumn(name="dm_id")
     private DmEntity dm;
 
-    @OneToMany(mappedBy = "dm")
-    private List<MessageEntity> dmId = new ArrayList<>();
+    @Builder
+    public UserDmEntity(UserEntity user, DmEntity dm){
+        this.user = user;
+        this.dm = dm;
+    }
 
-//    @OneToMany(mappedBy = "user")
-//    private List<MessageEntity> userId = new ArrayList<>();
+
 
 }
