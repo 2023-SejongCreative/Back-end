@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -55,5 +52,34 @@ public class DmController {
     }
 
 
+    @GetMapping("chat/{chat_id}/userlist")
+    public ResponseEntity<Object> userList (@PathVariable("chat_id") int dmId){
 
+
+        String userList = dmService.dmUserList(dmId);
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
+
+    @GetMapping("chat/chatlist")
+    public ResponseEntity<Object> chatList(@RequestHeader("access_token") String accessToken){
+
+        String email = jwtTokenProvider.getEmail(accessToken);
+
+        String dmList = dmService.dmList(email);
+
+        return new ResponseEntity<>(dmList, HttpStatus.OK);
+    }
+
+    @PostMapping("chat/{chat_id}/leave")
+    public ResponseEntity<Object> leaveChat(@RequestHeader("access_token") String accessToken,
+                                            @PathVariable("chat_id") int dmId) {
+
+        String email = jwtTokenProvider.getEmail(accessToken);
+
+
+
+
+        return new ResponseEntity<>("채팅방 나가기에 성공하셨습니다.", HttpStatus.OK);
+    }
 }

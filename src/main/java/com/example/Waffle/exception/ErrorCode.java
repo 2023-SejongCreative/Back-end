@@ -18,8 +18,13 @@ public enum ErrorCode {
     CANT_FINDROOM(HttpStatus.BAD_REQUEST, "ROOM-002", "룸 목록을 조회할 수 없습니다."),
     TOO_MANY_PEOPLE(HttpStatus.BAD_REQUEST, "DM-001", "사용자가 너무 많습니다."),
     NO_DM(HttpStatus.BAD_REQUEST, "DM-002", "채팅방이 존재하지 않습니다."),
+    CANT_FINDDMUSER(HttpStatus.BAD_REQUEST, "DM-004", "채팅방 사용자 목록을 불러올 수 없습니다"),
+
+    CANT_FINDUSERDM(HttpStatus.BAD_REQUEST, "DM-005", "사용자의 채팅방 목록을 불러올 수 없습니다"),
+
     /*401 UNAUTHROIZED : 인증 안됨*/
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-001", "리프레시 토큰이 유효하지 않습니다."),
+
 
     /*409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재*/
     DUPLICATE_ID(HttpStatus.CONFLICT, "REGISTER-001", "아이디가 중복되었습니다."),
