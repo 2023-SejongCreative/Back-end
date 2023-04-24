@@ -36,4 +36,9 @@ public class DmEntity {
         this.last_time = last_time;
     }
 
+    public void changeCount(int count){
+        this.count = count;
+    }
+
+
 }

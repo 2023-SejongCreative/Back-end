@@ -69,9 +69,8 @@ public class DmService {
             UserDmDto userDmDto = new UserDmDto(userEntity, dmEntity);
             userDmRepository.save(userDmDto.toEntity());
             int count = dmEntity.getCount() + 1;
-            dmEntity.builder()
-                    .count(count)
-                    .build();
+            dmEntity.changeCount(count);
+            dmRepository.save(dmEntity);
         }
 
     }
@@ -110,7 +109,7 @@ public class DmService {
             JSONArray dmArr = new JSONArray();
             for(UserDmEntity userDmEntity : userDmEntities){
                 JSONObject dm = new JSONObject();
-                DmEntity dmEntity = new UserDmEntity().getDm();
+                DmEntity dmEntity = userDmEntity.getDm();
                 dm.put("name", dmEntity.getName());
                 dm.put("id", dmEntity.getId());
                 dm.put("last_chat", dmEntity.getLast_chat());
@@ -128,6 +127,7 @@ public class DmService {
     public void leaveChat(String email, int dmId){
 
         try{
+
             DmEntity dmEntity = dmRepository.findById(dmId)
                     .orElseThrow(()->new UserException(ErrorCode.NO_DM));
 
@@ -148,12 +148,11 @@ public class DmService {
             else{
                 userDmRepository.deleteByUserIdAndDmId(userEntity.getId(), dmEntity.getId());
                 int count = dmEntity.getCount() -1;
-                dmEntity.builder()
-                        .count(count)
-                        .build();
+                dmEntity.changeCount(count);
+                dmRepository.save(dmEntity);
             }
-
-
+        }catch(Exception e){
+            throw new UserException(ErrorCode.INTER_SERVER_ERROR);
         }
 
 

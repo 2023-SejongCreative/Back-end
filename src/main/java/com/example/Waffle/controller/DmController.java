@@ -71,14 +71,14 @@ public class DmController {
         return new ResponseEntity<>(dmList, HttpStatus.OK);
     }
 
-    @PostMapping("chat/{chat_id}/leave")
+    @PostMapping("chat/{chat_id}/delete")
     public ResponseEntity<Object> leaveChat(@RequestHeader("access_token") String accessToken,
                                             @PathVariable("chat_id") int dmId) {
 
         String email = jwtTokenProvider.getEmail(accessToken);
-
-
-
+        System.out.println("0-0");
+        dmService.leaveChat(email,dmId);
+        System.out.println("0-1");
 
         return new ResponseEntity<>("채팅방 나가기에 성공하셨습니다.", HttpStatus.OK);
     }
