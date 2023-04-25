@@ -27,17 +27,17 @@ public class RoomEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
-    private GroupEntity groupId;
+    private GroupEntity group;
 
     @OneToMany(mappedBy = "room")
     private List<UserRoomEntity> userRoom = new ArrayList<>();
 
 
     @Builder
-    public RoomEntity(String name, int type, GroupEntity groupId){
+    public RoomEntity(String name, int type, GroupEntity group){
         this.name = name;
         this.type = type;
-        this.groupId = groupId;
+        this.group = group;
     }
 
 }

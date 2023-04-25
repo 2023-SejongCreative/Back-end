@@ -23,7 +23,7 @@ public class GroupEntity {
     @OneToMany(mappedBy = "group")
     private List<UserGroupEntity> userGroup = new ArrayList<>();
 
-    @OneToMany(mappedBy = "groupId")
+    @OneToMany(mappedBy = "group")
     private List<RoomEntity> room = new ArrayList<>();
 
 

@@ -20,7 +20,7 @@ public class RoomDto {
         RoomEntity roomEntity = new RoomEntity().builder()
                 .name(name)
                 .type(type)
-                .groupId(groupId)
+                .group(groupId)
                 .build();
 
         return roomEntity;
