@@ -32,6 +32,8 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
 
+	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.26.0'
+
 
 	annotationProcessor('org.projectlombok:lombok')
 	testAnnotationProcessor('org.projectlombok:lombok')
