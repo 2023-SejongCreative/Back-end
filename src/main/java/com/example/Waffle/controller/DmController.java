@@ -52,7 +52,7 @@ public class DmController {
     }
 
 
-    @GetMapping("chat/{chat_id}/userlist")
+    @GetMapping("/chat/{chat_id}/userlist")
     public ResponseEntity<Object> userList (@PathVariable("chat_id") int dmId){
 
 
@@ -61,7 +61,7 @@ public class DmController {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
-    @GetMapping("chat/chatlist")
+    @GetMapping("/chat/chatlist")
     public ResponseEntity<Object> chatList(@RequestHeader("access_token") String accessToken){
 
         String email = jwtTokenProvider.getEmail(accessToken);
@@ -71,7 +71,7 @@ public class DmController {
         return new ResponseEntity<>(dmList, HttpStatus.OK);
     }
 
-    @PostMapping("chat/{chat_id}/delete")
+    @PostMapping("/chat/{chat_id}/delete")
     public ResponseEntity<Object> leaveChat(@RequestHeader("access_token") String accessToken,
                                             @PathVariable("chat_id") int dmId) {
 
