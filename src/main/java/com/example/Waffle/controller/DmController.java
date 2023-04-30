@@ -34,11 +34,6 @@ public class DmController {
     private final MessageService messageService;
     private final UserRepository userRepository;
 
-    @GetMapping("/ch")
-    public ResponseEntity<Object> check (@RequestHeader("access_token") String accessToken){
-        System.out.println(jwtTokenProvider.getEmail(accessToken));
-        return new ResponseEntity<>("확인", HttpStatus.OK);
-    }
 
     @PostMapping("/chat/create")
     public ResponseEntity<Object> creatChat (@RequestBody Map<String, List<String>> param,

@@ -19,7 +19,6 @@ public enum ErrorCode {
     TOO_MANY_PEOPLE(HttpStatus.BAD_REQUEST, "DM-001", "사용자가 너무 많습니다."),
     NO_DM(HttpStatus.BAD_REQUEST, "DM-002", "채팅방이 존재하지 않습니다."),
     CANT_FINDDMUSER(HttpStatus.BAD_REQUEST, "DM-004", "채팅방 사용자 목록을 불러올 수 없습니다"),
-
     CANT_FINDUSERDM(HttpStatus.BAD_REQUEST, "DM-005", "사용자의 채팅방 목록을 불러올 수 없습니다"),
 
     /*401 UNAUTHROIZED : 인증 안됨*/
