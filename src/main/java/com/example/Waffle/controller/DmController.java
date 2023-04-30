@@ -118,6 +118,7 @@ public class DmController {
         chatDto.setUserId(userEntity.getId());
         simpMessageSendingOperations.convertAndSend("sub/chat/" + chatDto.getDmId(), chatDto);
 
+
         //messageService.saveMessage(messageEntity);
 
     }
