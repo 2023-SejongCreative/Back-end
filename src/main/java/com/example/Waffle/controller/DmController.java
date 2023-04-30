@@ -69,8 +69,8 @@ public class DmController {
 
 
     @GetMapping("/chat/{chat_id}/userlist")
-    public @ResponseBody ResponseEntity<Object> userList (@PathVariable("chat_id") int dmId){
-
+    @ReponseBody
+    public ResponseEntity<Object> userList (@PathVariable("chat_id") int dmId){
 
         String userList = dmService.dmUserList(dmId);
 
@@ -78,7 +78,8 @@ public class DmController {
     }
 
     @GetMapping("/chat/chatlist")
-    public @ResponseBody ResponseEntity<Object> chatList(@RequestHeader("access_token") String accessToken){
+    @ResponseBody
+    public ResponseEntity<Object> chatList(@RequestHeader("access_token") String accessToken){
 
         String email = jwtTokenProvider.getEmail(accessToken);
 
