@@ -1,14 +1,10 @@
 package com.example.Waffle.controller;
 
-import com.example.Waffle.dto.ResponseDto;
 import com.example.Waffle.dto.UserDto;
 import com.example.Waffle.dto.LoginDto;
-import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.token.JwtTokenProvider;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +21,6 @@ public class AuthController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
     private final HttpServletResponse response;
 
     @PostMapping("/register")

@@ -9,6 +9,7 @@ import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import com.example.Waffle.repository.DmRepository;
+import com.example.Waffle.repository.MessageRepository;
 import com.example.Waffle.repository.UserDmRepository;
 import com.example.Waffle.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +29,12 @@ public class DmService {
     private final UserRepository userRepository;
     private final UserDmRepository userDmRepository;
     private final MessageService messageService;
+    private final MessageRepository messageRepository;
     @Transactional
     public Long createDm(DmDto dmDto, List<String> emails){
 
         if(dmDto.getCount() > 6)
-            new UserException(ErrorCode.TOO_MANY_PEOPLE);
+            throw new UserException(ErrorCode.TOO_MANY_PEOPLE);
 
         DmEntity dmEntity = dmDto.toEntity();
 
@@ -62,6 +64,9 @@ public class DmService {
         Optional<UserDmEntity> userDmEntity = userDmRepository.findByUserIdAndDmId(userEntity.getId(), dmEntity.getId());
         if(userDmEntity.isPresent()){
             throw new UserException(ErrorCode.DUPLICATE_DM_USER);
+        }
+        else if(dmEntity.getCount() >= 6){
+            throw new UserException(ErrorCode.TOO_MANY_PEOPLE);
         }
         else{
             UserDmDto userDmDto = new UserDmDto(userEntity, dmEntity);
@@ -137,6 +142,7 @@ public class DmService {
 
                 for(MessageEntity messageEntity : messageEntities){
                     //message 삭제
+                    messageRepository.deleteById(messageEntity.getId());
                 }
 
                 userDmRepository.deleteByUserIdAndDmId(userEntity.getId(), dmEntity.getId());

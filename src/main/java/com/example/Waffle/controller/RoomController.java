@@ -3,8 +3,6 @@ package com.example.Waffle.controller;
 import com.example.Waffle.dto.RoomDto;
 import com.example.Waffle.service.RoomService;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
