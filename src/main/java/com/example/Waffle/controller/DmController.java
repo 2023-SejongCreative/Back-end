@@ -69,7 +69,7 @@ public class DmController {
 
 
     @GetMapping("/chat/{chat_id}/userlist")
-    @ReponseBody
+    @ResponseBody
     public ResponseEntity<Object> userList (@PathVariable("chat_id") int dmId){
 
         String userList = dmService.dmUserList(dmId);
