@@ -1,5 +1,6 @@
 package com.example.Waffle.service;
 
+import com.example.Waffle.dto.ChatDto;
 import com.example.Waffle.entity.DM.DmEntity;
 import com.example.Waffle.entity.DM.MessageEntity;
 import com.example.Waffle.entity.DM.UserDmEntity;
@@ -8,12 +9,15 @@ import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import com.example.Waffle.repository.DmRepository;
 import com.example.Waffle.repository.MessageRepository;
+import com.example.Waffle.repository.UserDmRepository;
+import com.example.Waffle.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,6 +26,7 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final DmRepository dmRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public List<MessageEntity> getMessages(DmEntity dmEntity){
@@ -29,8 +34,21 @@ public class MessageService {
     }
 
     @Transactional
-    public void saveMessage(MessageEntity messageEntity){
+    public void saveMessage(ChatDto chatDto){
+        UserEntity userEntity = userRepository.findById(chatDto.getUserId())
+                .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
+        DmEntity dmEntity = dmRepository.findById(chatDto.getDmId())
+                .orElseThrow(() -> new UserException(ErrorCode.NO_DM));
+
+        MessageEntity messageEntity = new MessageEntity().builder()
+                .chat(chatDto.getContent())
+                .user(userEntity)
+                .dm(dmEntity)
+                .time(chatDto.getTime())
+                .build();
+
         messageRepository.save(messageEntity);
+
     }
 
 
@@ -55,6 +73,17 @@ public class MessageService {
             throw new UserException(ErrorCode.CANT_FINDDMUSER);
         }
         return messageList.toString();
+    }
+
+    @Transactional
+    public ChatDto createChatDto(String email, ChatDto chatDto){
+
+        UserEntity userEntity = userRepository.findByemail(email)
+                .orElseThrow(()-> new UserException(ErrorCode.NO_USER));
+        chatDto.setTime(LocalDateTime.now());
+        chatDto.setUserId(userEntity.getId());
+
+        return chatDto;
     }
 
 }
