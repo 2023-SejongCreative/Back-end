@@ -69,7 +69,7 @@ public class DmController {
 
 
     @GetMapping("/chat/{chat_id}/userlist")
-    @ReponseBody
+    @ResponseBody
     public ResponseEntity<Object> userList (@PathVariable("chat_id") int dmId){
 
         String userList = dmService.dmUserList(dmId);
@@ -112,15 +112,12 @@ public class DmController {
                         @RequestHeader("access_token") String accessToken){
 
         String email = jwtTokenProvider.getEmail(accessToken);
-        UserEntity userEntity = userRepository.findByemail(email)
-                .orElseThrow(()-> new UserException(ErrorCode.NO_USER));
-        System.out.println(jwtTokenProvider.getEmail(accessToken));
-        chatDto.setTime(LocalDateTime.now());
-        chatDto.setUserId(userEntity.getId());
-        simpMessageSendingOperations.convertAndSend("sub/chat/" + chatDto.getDmId(), chatDto);
 
+        ChatDto message = messageService.createChatDto(email, chatDto);
 
-        //messageService.saveMessage(messageEntity);
+        simpMessageSendingOperations.convertAndSend("sub/chat/" + message.getDmId(), message);
+
+        messageService.saveMessage(message);
 
     }
 
