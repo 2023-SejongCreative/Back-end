@@ -91,24 +91,23 @@ public class DmController {
 
     @GetMapping("/chat/{chat_id}/messagelist")
     @ResponseBody
-    public ResponseEntity<Object> messageList(@RequestHeader("access_token") String accessToken,
-                            @PathVariable("chat_id") int dmId){
-        String email = jwtTokenProvider.getEmail(accessToken);
+    public ResponseEntity<Object> messageList(@PathVariable("chat_id") int dmId){
         String messageList = messageService.messageList(dmId);
         return new ResponseEntity<>(messageList, HttpStatus.OK);
     }
 
     @MessageMapping("/chat")
-    public void message(ChatDto chatDto,
-                        @RequestHeader("access_token") String accessToken){
+    public void message(ChatDto chatDto){
 
-        String email = jwtTokenProvider.getEmail(accessToken);
+        System.out.println("1");
 
-        ChatDto message = messageService.createChatDto(email, chatDto);
-
-        simpMessageSendingOperations.convertAndSend("sub/chat/" + message.getDmId(), message);
+        ChatDto message = messageService.createChatDto(chatDto);
 
         messageService.saveMessage(message);
+
+        System.out.println("2");
+
+        simpMessageSendingOperations.convertAndSend("sub/chat/" + message.getDmId(), message);
 
     }
 

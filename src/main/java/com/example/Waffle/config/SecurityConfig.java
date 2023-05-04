@@ -55,7 +55,7 @@ public class SecurityConfig{
                 .and()
 
                 .authorizeHttpRequests()
-                .requestMatchers("/register", "/login", "/chat").permitAll()
+                .requestMatchers("/register", "/login", "/chat-stomp/**").permitAll()
                 .requestMatchers("/logout").authenticated()
                 .anyRequest().authenticated()
                 .and()
