@@ -2,6 +2,8 @@ package com.example.Waffle.controller;
 
 import com.example.Waffle.dto.ChatDto;
 import com.example.Waffle.dto.DmDto;
+import com.example.Waffle.exception.ErrorCode;
+import com.example.Waffle.exception.UserException;
 import com.example.Waffle.service.DmService;
 import com.example.Waffle.service.MessageService;
 import com.example.Waffle.token.JwtTokenProvider;
@@ -9,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -99,17 +103,27 @@ public class DmController {
     }
 
     @MessageMapping("/chat")
-    public void message(ChatDto chatDto,
-                        @RequestHeader("access_token") String accessToken){
+    public void message(ChatDto chatDto, WebSocketSession session){
 
-        String email = jwtTokenProvider.getEmail(accessToken);
+        Boolean isValidToken = (Boolean) session.getAttributes().get("isValidToken");
 
-        ChatDto message = messageService.createChatDto(email, chatDto);
+        System.out.println(isValidToken);
 
-        simpMessageSendingOperations.convertAndSend("sub/chat/" + message.getDmId(), message);
+        System.out.println("[" + chatDto.getSender() + "] : " + chatDto.getContent());
 
-        messageService.saveMessage(message);
+        //유효한 토큰인 경우
+        if (isValidToken != null && isValidToken) {
 
+            ChatDto message = messageService.createChatDto(chatDto);
+
+            messageService.saveMessage(message);
+
+            simpMessageSendingOperations.convertAndSend("sub/chat/" + message.getDmId(), message);
+        }
+        //유효하지 않은 토큰인 경우
+        else {
+            throw new UserException(ErrorCode.CANT_USE_DM);
+        }
     }
 
 

@@ -33,7 +33,7 @@ public class MessageService {
 
     @Transactional
     public void saveMessage(ChatDto chatDto){
-        UserEntity userEntity = userRepository.findById(chatDto.getUserId())
+        UserEntity userEntity = userRepository.findByEmail(chatDto.getSender())
                 .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
         DmEntity dmEntity = dmRepository.findById(chatDto.getDmId())
                 .orElseThrow(() -> new UserException(ErrorCode.NO_DM));
@@ -74,12 +74,9 @@ public class MessageService {
     }
 
     @Transactional
-    public ChatDto createChatDto(String email, ChatDto chatDto){
+    public ChatDto createChatDto(ChatDto chatDto){
 
-        UserEntity userEntity = userRepository.findByemail(email)
-                .orElseThrow(()-> new UserException(ErrorCode.NO_USER));
         chatDto.setTime(LocalDateTime.now());
-        chatDto.setUserId(userEntity.getId());
 
         return chatDto;
     }
