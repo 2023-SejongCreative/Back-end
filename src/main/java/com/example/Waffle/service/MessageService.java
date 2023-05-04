@@ -38,7 +38,8 @@ public class MessageService {
         DmEntity dmEntity = dmRepository.findById(chatDto.getDmId())
                 .orElseThrow(() -> new UserException(ErrorCode.NO_DM));
 
-        MessageEntity messageEntity = new MessageEntity().builder()
+        new MessageEntity();
+        MessageEntity messageEntity = MessageEntity.builder()
                 .chat(chatDto.getContent())
                 .user(userEntity)
                 .dm(dmEntity)

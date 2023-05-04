@@ -95,14 +95,13 @@ public class DmController {
 
     @GetMapping("/chat/{chat_id}/messagelist")
     @ResponseBody
-    public ResponseEntity<Object> messageList(@RequestHeader("access_token") String accessToken,
-                            @PathVariable("chat_id") int dmId){
-        String email = jwtTokenProvider.getEmail(accessToken);
+    public ResponseEntity<Object> messageList(@PathVariable("chat_id") int dmId){
         String messageList = messageService.messageList(dmId);
         return new ResponseEntity<>(messageList, HttpStatus.OK);
     }
 
     @MessageMapping("/chat")
+
     public void message(ChatDto chatDto, WebSocketSession session){
 
         Boolean isValidToken = (Boolean) session.getAttributes().get("isValidToken");
@@ -117,6 +116,7 @@ public class DmController {
             ChatDto message = messageService.createChatDto(chatDto);
 
             messageService.saveMessage(message);
+
 
             simpMessageSendingOperations.convertAndSend("sub/chat/" + message.getDmId(), message);
         }

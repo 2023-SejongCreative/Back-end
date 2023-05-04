@@ -21,13 +21,13 @@ public class MessageDto {
 
 
     public MessageEntity toEntity(){
-        MessageEntity messageEntity = new MessageEntity().builder()
+        new MessageEntity();
+        return MessageEntity.builder()
                 .chat(chat)
                 .time(time)
                 .user(user)
                 .dm(dm)
                 .build();
-        return messageEntity;
     }
 
 }
