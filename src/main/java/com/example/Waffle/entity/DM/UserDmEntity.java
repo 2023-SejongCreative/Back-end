@@ -1,13 +1,10 @@
 package com.example.Waffle.entity.DM;
 
-
-import com.example.Waffle.entity.GroupEntity;
 import com.example.Waffle.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 @Getter

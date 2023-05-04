@@ -2,21 +2,13 @@ package com.example.Waffle.controller;
 
 import com.example.Waffle.dto.ChatDto;
 import com.example.Waffle.dto.DmDto;
-import com.example.Waffle.dto.MessageDto;
-import com.example.Waffle.entity.DM.MessageEntity;
-import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.exception.ErrorCode;
-import com.example.Waffle.exception.UserException;
-import com.example.Waffle.repository.UserRepository;
 import com.example.Waffle.service.DmService;
 import com.example.Waffle.service.MessageService;
-import com.example.Waffle.service.UserService;
 import com.example.Waffle.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +24,6 @@ public class DmController {
     private final JwtTokenProvider jwtTokenProvider;
     private final SimpMessageSendingOperations simpMessageSendingOperations;
     private final MessageService messageService;
-    private final UserRepository userRepository;
 
 
     @PostMapping("/chat/create")

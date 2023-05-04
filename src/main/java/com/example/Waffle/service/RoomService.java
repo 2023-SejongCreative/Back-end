@@ -14,7 +14,6 @@ import com.example.Waffle.repository.RoomRepository;
 import com.example.Waffle.repository.UserRepository;
 import com.example.Waffle.repository.UserRoomRepository;
 import com.example.Waffle.token.JwtTokenProvider;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
