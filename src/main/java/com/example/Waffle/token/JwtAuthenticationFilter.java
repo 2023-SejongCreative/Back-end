@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,13 +32,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("request null");
         }
 
+//        System.out.println("----------header start-----------");
+//        request.getHeaderNames().asIterator().forEachRemaining(
+//                headerName -> System.out.println(headerName + ": " + request.getHeader(headerName))
+//        );
+//        System.out.println("----------header end----------");
+
         // 헤더에서 JWT 토큰 받아오기
-        String accessToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "access_token");
-        String refreshToken = jwtTokenProvider.resolveToken((HttpServletRequest) request, "refresh_token");
+        String accessToken = jwtTokenProvider.resolveToken(request, "access_token");
+        String refreshToken = jwtTokenProvider.resolveToken(request, "refresh_token");
 
         System.out.println("["+accessToken+"]");
         System.out.println("["+refreshToken+"]");
-        if(accessToken != null) {
+
+        if(request.getHeader("upgrade") != null){
+            if(request.getHeader("upgrade").equals("websocket"))
+                System.out.println("yes");
+        }
+        else if(accessToken != null) {
             // 어세스 토큰값이 유효하다면 setAuthentication를 통해
             // security context에 인증 정보저장
             if(jwtTokenProvider.validateToken(accessToken)){
