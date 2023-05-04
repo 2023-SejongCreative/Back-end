@@ -24,6 +24,7 @@ public enum ErrorCode {
 
     /*401 UNAUTHROIZED : 인증 안됨*/
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-001", "리프레시 토큰이 유효하지 않습니다."),
+    CANT_USE_DM(HttpStatus.UNAUTHORIZED, "DM-006", "검증되지 않은 유저로 DM 사용이 불가합니다."),
 
 
     /*409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재*/
