@@ -32,11 +32,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("request null");
         }
 
-//        System.out.println("----------header start-----------");
-//        request.getHeaderNames().asIterator().forEachRemaining(
-//                headerName -> System.out.println(headerName + ": " + request.getHeader(headerName))
-//        );
-//        System.out.println("----------header end----------");
+        System.out.println("----------header start-----------");
+        request.getHeaderNames().asIterator().forEachRemaining(
+                headerName -> System.out.println(headerName + ": " + request.getHeader(headerName))
+        );
+        System.out.println("----------header end----------");
 
         // 헤더에서 JWT 토큰 받아오기
         String accessToken = jwtTokenProvider.resolveToken(request, "access_token");
@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if(request.getHeader("upgrade") != null){
             if(request.getHeader("upgrade").equals("websocket"))
-                System.out.println("yes");
+                System.out.println("websocket connect request");
         }
         else if(accessToken != null) {
             // 어세스 토큰값이 유효하다면 setAuthentication를 통해
