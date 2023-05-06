@@ -64,10 +64,11 @@ public class MessageService {
                 JSONObject message = new JSONObject();
                 message.put("chat", messageEntity.getChat());
                 message.put("time", messageEntity.getTime());
-                message.put(("user_id"), messageEntity.getUser());
+                message.put(("user_email"), messageEntity.getUserEmail());
+                message.put(("user_name"), messageEntity.getUserName());
                 messageArr.put(message);
             }
-            messageList.put("users", messageArr);
+            messageList.put("messages", messageArr);
         }catch (Exception e){
             throw new UserException(ErrorCode.CANT_FINDDMUSER);
         }

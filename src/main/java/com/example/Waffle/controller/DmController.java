@@ -10,6 +10,7 @@ import com.example.Waffle.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -101,29 +102,17 @@ public class DmController {
     }
 
     @MessageMapping("/chat")
+    public void message(ChatDto chatDto, @Header("access_token") String accessToken){
 
-    public void message(ChatDto chatDto, WebSocketSession session){
-
-        Boolean isValidToken = (Boolean) session.getAttributes().get("isValidToken");
-
-        System.out.println(isValidToken);
-
+        String email = jwtTokenProvider.getEmail(accessToken);
         System.out.println("[" + chatDto.getSender() + "] : " + chatDto.getContent());
 
-        //유효한 토큰인 경우
-        if (isValidToken != null && isValidToken) {
+        ChatDto message = messageService.createChatDto(chatDto);
 
-            ChatDto message = messageService.createChatDto(chatDto);
+        messageService.saveMessage(message);
 
-            messageService.saveMessage(message);
+        simpMessageSendingOperations.convertAndSend("/sub/chat/" + message.getDmId(), message);
 
-
-            simpMessageSendingOperations.convertAndSend("sub/chat/" + message.getDmId(), message);
-        }
-        //유효하지 않은 토큰인 경우
-        else {
-            throw new UserException(ErrorCode.CANT_USE_DM);
-        }
     }
 
 

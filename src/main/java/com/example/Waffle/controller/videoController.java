@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
 
@@ -36,17 +37,21 @@ public class videoController {
 
     //openvidu 서버에 새로운 session 생성
     @PostMapping("/chat/session")
-    public ResponseEntity<String> initializeSession(@RequestBody Map<String, String> param)
+    @ResponseBody
+    public ResponseEntity<Object> initializeSession(@RequestBody Map<String, String> param)
             throws OpenViduJavaClientException, OpenViduHttpException {
 
             SessionProperties properties = SessionProperties.fromJson(param).build();
             Session session = this.openvidu.createSession(properties);
 
+        System.out.println("[" + session.getSessionId());
+
         return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
     }
 
     @PostMapping("/chat/session/{session_id}/connect")
-    public ResponseEntity<String> createConnection(@PathVariable("session_id") String sessionId,
+    @ResponseBody
+    public ResponseEntity<Object> createConnection(@PathVariable("session_id") String sessionId,
                                                    @RequestBody Map<String, String> param)
         throws OpenViduJavaClientException, OpenViduHttpException{
 
