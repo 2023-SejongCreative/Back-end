@@ -105,7 +105,7 @@ public class DmController {
     public void message(ChatDto chatDto, @Header("access_token") String accessToken){
 
         String email = jwtTokenProvider.getEmail(accessToken);
-        System.out.println("[" + chatDto.getSender() + "] : " + chatDto.getContent());
+        System.out.println("[" + chatDto.getUser_email() + "] : " + chatDto.getContent());
 
         ChatDto message = messageService.createChatDto(chatDto);
 

@@ -45,7 +45,7 @@ dependencies {
 	implementation 'org.webjars:sockjs-client:1.5.1'
 	implementation 'org.webjars:stomp-websocket:2.3.4'
 
-	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.26.0'
+	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.27.0'
 
 	annotationProcessor('org.projectlombok:lombok')
 	testAnnotationProcessor('org.projectlombok:lombok')
