@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChatDto {
     private int dmId;
-    private String sender;
+    private String user_email;
+    private String user_name;
     private String content;
     private LocalDateTime time;
 }

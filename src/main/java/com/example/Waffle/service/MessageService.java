@@ -33,7 +33,7 @@ public class MessageService {
 
     @Transactional
     public void saveMessage(ChatDto chatDto){
-        UserEntity userEntity = userRepository.findByEmail(chatDto.getSender())
+        UserEntity userEntity = userRepository.findByEmail(chatDto.getUser_email())
                 .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
         DmEntity dmEntity = dmRepository.findById(chatDto.getDmId())
                 .orElseThrow(() -> new UserException(ErrorCode.NO_DM));
@@ -62,12 +62,13 @@ public class MessageService {
             JSONArray messageArr = new JSONArray();
             for(MessageEntity messageEntity : messageEntities){
                 JSONObject message = new JSONObject();
-                message.put("chat", messageEntity.getChat());
+                message.put("content", messageEntity.getChat());
                 message.put("time", messageEntity.getTime());
-                message.put(("user_id"), messageEntity.getUser());
+                message.put(("user_email"), messageEntity.getUserEmail());
+                message.put(("user_name"), messageEntity.getUserName());
                 messageArr.put(message);
             }
-            messageList.put("users", messageArr);
+            messageList.put("messages", messageArr);
         }catch (Exception e){
             throw new UserException(ErrorCode.CANT_FINDDMUSER);
         }
@@ -77,7 +78,13 @@ public class MessageService {
     @Transactional
     public ChatDto createChatDto(ChatDto chatDto){
 
+        UserEntity userEntity = userRepository.findByEmail(chatDto.getUser_email())
+                .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
+
+        chatDto.setUser_name(userEntity.getName());
+
         chatDto.setTime(LocalDateTime.now());
+
 
         return chatDto;
     }

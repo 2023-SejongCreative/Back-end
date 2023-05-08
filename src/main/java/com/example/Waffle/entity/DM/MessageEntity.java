@@ -32,6 +32,14 @@ public class MessageEntity {
     private String chat;
     private LocalDateTime time;
 
+    public String getUserName(){
+        return user.getName();
+    }
+
+    public String getUserEmail(){
+        return user.getEmail();
+    }
+
     @Builder
     public MessageEntity(DmEntity dm, UserEntity user, String chat, LocalDateTime time){
         this.dm = dm;
