@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-public class videoController {
+public class VideoController {
 
     @Value("${openvidu.url}")
     private String openviduUrl;
