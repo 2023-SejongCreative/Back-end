@@ -2,6 +2,7 @@ package com.example.Waffle.controller;
 
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
+import com.example.Waffle.service.VideoService;
 import io.openvidu.java.client.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class VideoController {
+
+    private final VideoService videoService;
 
     @Value("${openvidu.url}")
     private String openviduUrl;
@@ -41,12 +44,11 @@ public class VideoController {
     public ResponseEntity<Object> initializeSession(@RequestBody Map<String, String> param)
             throws OpenViduJavaClientException, OpenViduHttpException {
 
-            SessionProperties properties = SessionProperties.fromJson(param).build();
-            Session session = this.openvidu.createSession(properties);
+        String sessionId = videoService.createSession(this.openvidu, param);
 
-        System.out.println("[" + session.getSessionId());
+        System.out.println("[" + sessionId + "]");
 
-        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+        return new ResponseEntity<>(sessionId, HttpStatus.OK);
     }
 
     @PostMapping("/chat/session/{session_id}/connect")
