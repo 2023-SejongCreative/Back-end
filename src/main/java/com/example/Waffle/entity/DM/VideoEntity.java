@@ -1,6 +1,7 @@
 package com.example.Waffle.entity.DM;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,5 +24,12 @@ public class VideoEntity {
     private String sessionId;
 
     private int count;
+
+    @Builder
+    private VideoEntity(DmEntity dm, String sessionId, int count){
+        this.dm = dm;
+        this.sessionId = sessionId;
+        this.count = count;
+    }
 
 }
