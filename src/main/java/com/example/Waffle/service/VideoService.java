@@ -71,4 +71,20 @@ public class VideoService {
         }
 
     }
+
+    @Transactional
+    public void leaveSession(int dmId){
+
+        VideoEntity videoEntity = videoRepository.findById(dmId)
+                .orElseThrow(() -> new UserException(ErrorCode.CANT_FIND_SESSION));
+
+        int cnt = videoEntity.getCount();
+        if(cnt > 1){
+            videoEntity.changeCount(cnt - 1);
+            videoRepository.save(videoEntity);
+        }
+        else{
+            videoRepository.deleteById(videoEntity.getId());
+        }
+    }
 }

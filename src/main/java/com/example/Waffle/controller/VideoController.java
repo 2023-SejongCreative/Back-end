@@ -78,9 +78,19 @@ public class VideoController {
 
         int dmId = Integer.parseInt(param.get("id"));
 
-
+        videoService.enterSession(dmId);
 
         return ResponseEntity.ok("채팅방에 들어갔습니다.");
+    }
+
+    @PostMapping("/chat/session/leave")
+    @ResponseBody
+    public ResponseEntity<String> leave(@RequestBody Map<String, String> param){
+        int dmId = Integer.parseInt(param.get("id"));
+
+        videoService.leaveSession(dmId);
+
+        return ResponseEntity.ok("채팅방에서 나갔습니다.");
     }
 
    /*-----test 용------*/
