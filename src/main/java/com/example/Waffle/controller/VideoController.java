@@ -72,6 +72,17 @@ public class VideoController {
         return new ResponseEntity<>(url, HttpStatus.OK);
     }
 
+    @PostMapping("/chat/session/enter")
+    @ResponseBody
+    public ResponseEntity<String> enter(@RequestBody Map<String, String> param){
+
+        int dmId = Integer.parseInt(param.get("id"));
+
+
+
+        return ResponseEntity.ok("채팅방에 들어갔습니다.");
+    }
+
    /*-----test 용------*/
 //    @PostMapping("/api/sessions")
 //    @ResponseBody

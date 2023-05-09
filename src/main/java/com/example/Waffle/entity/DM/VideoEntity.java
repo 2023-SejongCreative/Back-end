@@ -32,4 +32,8 @@ public class VideoEntity {
         this.count = count;
     }
 
+    public void changeCount(int count){
+        this.count = count;
+    }
+
 }

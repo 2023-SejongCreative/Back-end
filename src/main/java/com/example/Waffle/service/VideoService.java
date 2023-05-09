@@ -54,4 +54,21 @@ public class VideoService {
         }
 
     }
+
+    @Transactional
+    public void enterSession(int dmId){
+
+        VideoEntity videoEntity = videoRepository.findById(dmId)
+                .orElseThrow(() -> new UserException(ErrorCode.CANT_FIND_SESSION));
+
+        int cnt = videoEntity.getCount();
+        if(cnt >= 6){
+            throw new UserException(ErrorCode.TOO_MANY_PEOPLE);
+        }
+        else{
+            videoEntity.changeCount(cnt + 1);
+            videoRepository.save(videoEntity);
+        }
+
+    }
 }
