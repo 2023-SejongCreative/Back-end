@@ -27,8 +27,8 @@ public class DmEntity {
     @OneToMany(mappedBy = "dm")
     private List<MessageEntity> message = new ArrayList<>();
 
-    @OneToOne(mappedBy = "dm")
-    private List<VideoEntity> video = new ArrayList<>();
+    @OneToOne(mappedBy = "dmEntity")
+    private VideoEntity videoEntity;
 
     @Builder
     public DmEntity(String name, int count, String last_chat, LocalDateTime last_time){

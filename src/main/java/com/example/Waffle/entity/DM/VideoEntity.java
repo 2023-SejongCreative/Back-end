@@ -17,8 +17,9 @@ public class VideoEntity {
     private Long id;
 
     @OneToOne
+    @MapsId
     @JoinColumn(name = "dm_id")
-    private DmEntity dm;
+    private DmEntity dmEntity;
 
     @Column(name = "session_id")
     private String sessionId;
@@ -27,7 +28,7 @@ public class VideoEntity {
 
     @Builder
     private VideoEntity(DmEntity dm, String sessionId, int count){
-        this.dm = dm;
+        this.dmEntity = dm;
         this.sessionId = sessionId;
         this.count = count;
     }
