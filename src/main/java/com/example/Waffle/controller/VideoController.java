@@ -2,6 +2,7 @@ package com.example.Waffle.controller;
 
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
+import com.example.Waffle.service.VideoService;
 import io.openvidu.java.client.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,9 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-public class videoController {
+public class VideoController {
+
+    private final VideoService videoService;
 
     @Value("${openvidu.url}")
     private String openviduUrl;
@@ -41,12 +44,11 @@ public class videoController {
     public ResponseEntity<Object> initializeSession(@RequestBody Map<String, String> param)
             throws OpenViduJavaClientException, OpenViduHttpException {
 
-            SessionProperties properties = SessionProperties.fromJson(param).build();
-            Session session = this.openvidu.createSession(properties);
+        String sessionId = videoService.createSession(this.openvidu, param);
 
-        System.out.println("[" + session.getSessionId());
+        System.out.println("[" + sessionId + "]");
 
-        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+        return new ResponseEntity<>(sessionId, HttpStatus.OK);
     }
 
     @PostMapping("/chat/session/{session_id}/connect")
@@ -68,6 +70,27 @@ public class videoController {
         System.out.println(url);
 
         return new ResponseEntity<>(url, HttpStatus.OK);
+    }
+
+    @PostMapping("/chat/session/enter")
+    @ResponseBody
+    public ResponseEntity<String> enter(@RequestBody Map<String, String> param){
+
+        int dmId = Integer.parseInt(param.get("id"));
+
+        videoService.enterSession(dmId);
+
+        return ResponseEntity.ok("채팅방에 들어갔습니다.");
+    }
+
+    @PostMapping("/chat/session/leave")
+    @ResponseBody
+    public ResponseEntity<String> leave(@RequestBody Map<String, String> param){
+        int dmId = Integer.parseInt(param.get("id"));
+
+        videoService.leaveSession(dmId);
+
+        return ResponseEntity.ok("채팅방에서 나갔습니다.");
     }
 
    /*-----test 용------*/
