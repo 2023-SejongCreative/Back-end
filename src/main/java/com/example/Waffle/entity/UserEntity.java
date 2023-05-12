@@ -45,6 +45,9 @@ public class UserEntity {
      @OneToMany(mappedBy = "user")
      private List<MessageEntity> message = new ArrayList<>();
 
+     @OneToMany(mappedBy = "user")
+     private List<PlanEntity> plan = new ArrayList<>();
+
 
      @Builder
     public UserEntity(String email, String password, String name){

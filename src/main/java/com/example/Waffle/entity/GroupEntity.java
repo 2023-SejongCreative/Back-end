@@ -27,6 +27,8 @@ public class GroupEntity {
     private List<RoomEntity> room = new ArrayList<>();
 
 
+    @OneToMany(mappedBy = "group")
+    private List<PlanEntity> plan = new ArrayList<>();
 
     @Builder
     public GroupEntity(String name){
