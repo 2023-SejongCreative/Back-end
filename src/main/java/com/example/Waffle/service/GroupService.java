@@ -27,6 +27,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
     private final RoomService roomService;
+    private final PlanService planService;
     @Transactional
     public Long createGroup(String email, GroupDto groupDto){
 
@@ -96,6 +97,9 @@ public class GroupService {
         try {
             GroupEntity groupEntity = groupRepository.findById(groupId)
                     .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
+
+            //group의 plan 전부 삭제
+            planService.allDeletePlan("group", groupEntity.getId());
 
             List<RoomEntity> roomEntities = roomService.getRooms(groupEntity);
 

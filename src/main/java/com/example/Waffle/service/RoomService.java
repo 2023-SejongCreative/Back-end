@@ -32,6 +32,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final UserRoomRepository userRoomRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PlanService planService;
 
     @Transactional
     public Long createRoom(RoomDto roomDto, String accessToken, int groupId){
@@ -152,6 +153,9 @@ public class RoomService {
             RoomEntity roomEntity = roomRepository.findById(roomId).orElseThrow(
                     () -> new UserException(ErrorCode.NO_ROOM)
             );
+
+            //room에 속한 plan 모두 삭제
+            planService.allDeletePlan("room", roomId);
 
             userRoomRepository.deleteByRoomId(roomEntity.getId());
 
