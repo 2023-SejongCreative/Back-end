@@ -26,8 +26,8 @@ public class PlanController {
                                              @PathVariable("type_id") Long typeId){
 
 
-        LocalDate startDate = LocalDate.parse(param.get("start_date"), DateTimeFormatter.ISO_DATE);
-        LocalDate endDate = LocalDate.parse(param.get("end_date"), DateTimeFormatter.ISO_DATE);
+        LocalDate startDate = LocalDate.parse(param.get("start"), DateTimeFormatter.ISO_DATE);
+        LocalDate endDate = LocalDate.parse(param.get("end"), DateTimeFormatter.ISO_DATE);
 
 
 
@@ -50,12 +50,12 @@ public class PlanController {
     }
 
 
-    @PostMapping("plan/{plan_id}/update")
+    @PostMapping("/plan/{plan_id}/update")
     public ResponseEntity<Object> updatePlan(@RequestBody Map<String, String> param,
                                              @PathVariable("plan_id") Long planId){
 
-        LocalDate startDate = LocalDate.parse(param.get("start_date"), DateTimeFormatter.ISO_DATE);
-        LocalDate endDate = LocalDate.parse(param.get("end_date"), DateTimeFormatter.ISO_DATE);
+        LocalDate startDate = LocalDate.parse(param.get("start"), DateTimeFormatter.ISO_DATE);
+        LocalDate endDate = LocalDate.parse(param.get("end"), DateTimeFormatter.ISO_DATE);
 
 
 
@@ -68,7 +68,7 @@ public class PlanController {
         return new ResponseEntity<>("일정이 수정되었습니다." ,HttpStatus.OK);
     }
 
-    @DeleteMapping("plan/{plan_id}/delete")
+    @DeleteMapping("/plan/{plan_id}/delete")
     public ResponseEntity<Object> deletePlan(@PathVariable("plan_id") Long planId){
 
         planService.deletePlan(planId);

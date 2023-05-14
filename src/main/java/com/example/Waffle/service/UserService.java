@@ -43,7 +43,7 @@ public class UserService {
 
     @Transactional
     //로그인 처리
-    public void login(LoginDto loginDto, HttpServletResponse response){
+    public Long login(LoginDto loginDto, HttpServletResponse response){
         //존재하는 유저인지 확인
         UserEntity userEntity = userRepository.findByemail(loginDto.getEmail()).orElseThrow(
                 () -> new UserException(ErrorCode.NO_USER)
@@ -63,6 +63,8 @@ public class UserService {
 
         // response 헤더에 Access Token / Refresh Token 넣음
         setHeader(response, tokenDto);
+
+        return userEntity.getId();
 
     }
 
