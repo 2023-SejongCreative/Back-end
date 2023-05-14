@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -26,21 +27,36 @@ public class PlanDto {
     private GroupEntity group;
     private RoomEntity room;
 
-    public PlanDto(String title, String content, LocalDate startDate, LocalDate endDate) {
+    public PlanDto(String title, String content) {
         this.title = title;
         this.content = content;
-        this.startDate = startDate;
-        this.endDate = endDate;
     }
 
     public void stringToIntState(String state){
-        if(state.equals("미완료"))
-            this.state = 0;
-        else if(state.equals("완료"))
-            this.state = 1;
-        else if(state.equals("진행중"))
-            this.state = 2;
+        if(state !=null) {
+            if (state.equals("미완료"))
+                this.state = 0;
+            else if (state.equals("완료"))
+                this.state = 1;
+            else if (state.equals("진행중"))
+                this.state = 2;
+            else this.state = null;
+        }
         else this.state = null;
+    }
+
+    public void setStartDate(String startDate){
+        if(startDate == null || startDate.equals(""))
+            this.startDate = null;
+        else
+            this.startDate = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE);
+    }
+
+    public void setEndDate(String endDate){
+        if(endDate == null || endDate.equals(""))
+            this.endDate = null;
+        else
+            this.endDate = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
     }
 
 

@@ -26,14 +26,12 @@ public class PlanController {
                                              @PathVariable("type_id") Long typeId){
 
 
-        LocalDate startDate = LocalDate.parse(param.get("start"), DateTimeFormatter.ISO_DATE);
-        LocalDate endDate = LocalDate.parse(param.get("end"), DateTimeFormatter.ISO_DATE);
+        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"));
 
-
-
-        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"), startDate, endDate);
-
-        planService.createPlan(planDto,type,typeId, param.get("state"));
+        planDto.setStartDate(param.get("start_date"));
+        planDto.setEndDate(param.get("end_date"));
+        planDto.stringToIntState(param.get("state"));
+        planService.createPlan(planDto,type,typeId);
 
 
         return new ResponseEntity<>("일정이 생성되었습니다.", HttpStatus.OK);
@@ -54,13 +52,11 @@ public class PlanController {
     public ResponseEntity<Object> updatePlan(@RequestBody Map<String, String> param,
                                              @PathVariable("plan_id") Long planId){
 
-        LocalDate startDate = LocalDate.parse(param.get("start"), DateTimeFormatter.ISO_DATE);
-        LocalDate endDate = LocalDate.parse(param.get("end"), DateTimeFormatter.ISO_DATE);
 
 
-
-        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"), startDate, endDate);
-
+        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"));
+        planDto.setStartDate(param.get("start_date"));
+        planDto.setEndDate(param.get("end_date"));
         planDto.stringToIntState(param.get("state"));
 
         planService.updatePlan(planDto,planId);

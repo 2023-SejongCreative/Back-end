@@ -28,17 +28,7 @@ public class PlanService {
     private final PlanRepository planRepository;
 
     @Transactional
-    public void createPlan(PlanDto planDto, String type, Long typeId, String state) {
-
-        if (state.equals("미완료")) {
-            planDto.setState(0);
-        } else if (state.equals("완료")) {
-            planDto.setState(1);
-        } else if (state.equals("진행중")) {
-            planDto.setState(2);
-        } else {
-            planDto.setState(null);
-        }
+    public void createPlan(PlanDto planDto, String type, Long typeId) {
 
 
         if (type.equals("home")) {
@@ -131,7 +121,9 @@ public class PlanService {
                     plan.put("start", planEntity.getStart_date());
                     plan.put("end",planEntity.getEnd_date());
                     String state;
-                    if(planEntity.getState() == 0)
+                    if (planEntity.getState() == null)
+                        state = null;
+                    else if(planEntity.getState() == 0)
                         state = "미완료";
                     else if(planEntity.getState() == 1)
                         state = "완료";
@@ -164,7 +156,9 @@ public class PlanService {
                     plan.put("start", planEntity.getStart_date());
                     plan.put("end",planEntity.getEnd_date());
                     String state;
-                    if(planEntity.getState() == 0)
+                    if (planEntity.getState() == null)
+                        state = null;
+                    else if(planEntity.getState() == 0)
                         state = "미완료";
                     else if(planEntity.getState() == 1)
                         state = "완료";
@@ -192,19 +186,21 @@ public class PlanService {
 
         PlanEntity planEntity = planRepository.findById(planId)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_PLAN));
-        if(!planDto.getTitle().equals(planEntity.getTitle())){
+
+
+        if(!planDto.getTitle().equals(planEntity.getTitle()) || planDto.getTitle() == null){
             planEntity.changeTitle(planDto.getTitle());
         }
-        if(!planDto.getContent().equals(planEntity.getContent())){
+        if(!planDto.getContent().equals(planEntity.getContent()) || planDto.getContent() == null){
             planEntity.changeContent(planDto.getContent());
         }
-        if(planDto.getStartDate() != planEntity.getStart_date()){
+        if(planDto.getStartDate() != planEntity.getStart_date() || planDto.getStartDate() == null){
             planEntity.changeStartDate(planDto.getStartDate());
         }
-        if(planDto.getEndDate() != planEntity.getEnd_date()){
+        if(planDto.getEndDate() != planEntity.getEnd_date() || planDto.getEndDate() == null){
             planEntity.changeEndDate(planDto.getEndDate());
         }
-        if(planDto.getState() != planEntity.getState()){
+        if(planDto.getState() != planEntity.getState() || planDto.getState() == null){
             planEntity.changeState(planDto.getState());
         }
 
@@ -220,6 +216,33 @@ public class PlanService {
 
         planRepository.deleteById(planId);
 
+
+    }
+
+    @Transactional
+    public void allDeletePlan(String type, Long id){
+
+        if(type.equals("group")){
+            try {
+                List<PlanEntity> planEntities = planRepository.findAllByGroupId(id);
+                for(PlanEntity planEntity : planEntities){
+                    planRepository.deleteById(planEntity.getId());
+                }
+            }catch(Exception e){
+                throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+            }
+        }
+
+        if(type.equals("room")){
+            try {
+                List<PlanEntity> planEntities = planRepository.findAllByRoomId(id);
+                for(PlanEntity planEntity : planEntities){
+                    planRepository.deleteById(planEntity.getId());
+                }
+            }catch(Exception e){
+                throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+            }
+        }
 
     }
 
