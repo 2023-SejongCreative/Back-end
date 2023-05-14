@@ -48,7 +48,7 @@ public class PlanController {
     }
 
 
-    @PostMapping("plan/{plan_id}/update")
+    @PostMapping("/plan/{plan_id}/update")
     public ResponseEntity<Object> updatePlan(@RequestBody Map<String, String> param,
                                              @PathVariable("plan_id") Long planId){
 
@@ -64,7 +64,7 @@ public class PlanController {
         return new ResponseEntity<>("일정이 수정되었습니다." ,HttpStatus.OK);
     }
 
-    @DeleteMapping("plan/{plan_id}/delete")
+    @DeleteMapping("/plan/{plan_id}/delete")
     public ResponseEntity<Object> deletePlan(@PathVariable("plan_id") Long planId){
 
         planService.deletePlan(planId);

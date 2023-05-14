@@ -69,6 +69,9 @@ public class PlanService {
     @Transactional
     public String planList(String type, Long typeId) {
 
+        JSONObject extended = new JSONObject();
+        extended.put("department", "");
+
         if (type.equals("home")) {
             UserEntity user = userRepository.findById(typeId)
                     .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
@@ -81,8 +84,8 @@ public class PlanService {
                     plan.put("id", planEntity.getId());
                     plan.put("title", planEntity.getTitle());
                     plan.put("content", planEntity.getContent());
-                    plan.put("start_date", planEntity.getStart_date());
-                    plan.put("end_date",planEntity.getEnd_date());
+                    plan.put("start", planEntity.getStart_date());
+                    plan.put("end",planEntity.getEnd_date());
                     String state;
                     if (planEntity.getState() == null)
                         state = null;
@@ -94,6 +97,8 @@ public class PlanService {
                         state = "진행중";
                     else state = null;
                     plan.put("state",state);
+
+                    plan.put("extendedProps", extended);
                     planArr.put(plan);
                 }
                 planList.put("plans", planArr);
@@ -113,8 +118,8 @@ public class PlanService {
                     plan.put("id", planEntity.getId());
                     plan.put("title", planEntity.getTitle());
                     plan.put("content", planEntity.getContent());
-                    plan.put("start_date", planEntity.getStart_date());
-                    plan.put("end_date",planEntity.getEnd_date());
+                    plan.put("start", planEntity.getStart_date());
+                    plan.put("end",planEntity.getEnd_date());
                     String state;
                     if (planEntity.getState() == null)
                         state = null;
@@ -126,6 +131,8 @@ public class PlanService {
                         state = "진행중";
                     else state = null;
                     plan.put("state",state);
+
+                    plan.put("extendedProps", extended);
                     planArr.put(plan);
                 }
                 planList.put("plans", planArr);
@@ -146,8 +153,8 @@ public class PlanService {
                     plan.put("id", planEntity.getId());
                     plan.put("title", planEntity.getTitle());
                     plan.put("content", planEntity.getContent());
-                    plan.put("start_date", planEntity.getStart_date());
-                    plan.put("end_date",planEntity.getEnd_date());
+                    plan.put("start", planEntity.getStart_date());
+                    plan.put("end",planEntity.getEnd_date());
                     String state;
                     if (planEntity.getState() == null)
                         state = null;
@@ -159,6 +166,8 @@ public class PlanService {
                         state = "진행중";
                     else state = null;
                     plan.put("state",state);
+
+                    plan.put("extendedProps", extended);
                     planArr.put(plan);
                 }
                 planList.put("plans", planArr);
@@ -177,7 +186,6 @@ public class PlanService {
 
         PlanEntity planEntity = planRepository.findById(planId)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_PLAN));
-
 
 
         if(!planDto.getTitle().equals(planEntity.getTitle()) || planDto.getTitle() == null){

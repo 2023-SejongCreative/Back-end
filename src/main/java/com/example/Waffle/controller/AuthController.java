@@ -43,9 +43,9 @@ public class AuthController {
         LoginDto loginDto = new LoginDto(param.get("email"),
                 param.get("password"));
 
-        userService.login(loginDto, response);
+        Long id = userService.login(loginDto, response);
 
-        return new ResponseEntity<>("로그인에 성공하였습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     @PostMapping("/")
