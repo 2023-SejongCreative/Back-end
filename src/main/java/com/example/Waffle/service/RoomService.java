@@ -63,7 +63,7 @@ public class RoomService {
 
     @Transactional
     public List<RoomEntity> getRooms(GroupEntity groupEntity){
-        return roomRepository.findAllByGroupId(groupEntity);
+        return roomRepository.findAllByGroup(groupEntity);
     }
 
     public String roomList(String accessToken, int groupId){

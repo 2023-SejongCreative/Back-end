@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
 
-    List<RoomEntity> findAllByGroupId(GroupEntity groupEntity);
+    List<RoomEntity> findAllByGroup(GroupEntity groupEntity);
 
     Optional<RoomEntity> findById(int roomId);
 }
