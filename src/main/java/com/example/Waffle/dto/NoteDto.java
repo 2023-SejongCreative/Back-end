@@ -7,10 +7,12 @@ import com.example.Waffle.entity.RoomEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoteDto {
@@ -22,6 +24,13 @@ public class NoteDto {
 
     private GroupEntity group;
     private RoomEntity room;
+
+    public NoteDto(String title, String content, LocalDate date, int notice){
+        this.title = title;
+        this.content = content;
+        this.date = date;
+        this.notice = notice;
+    }
 
     public NoteEntity toEntity(){
         NoteEntity noteEntity = new NoteEntity().builder()
