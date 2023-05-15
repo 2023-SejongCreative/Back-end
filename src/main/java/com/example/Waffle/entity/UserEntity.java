@@ -48,6 +48,10 @@ public class UserEntity {
      @OneToMany(mappedBy = "user")
      private List<PlanEntity> plan = new ArrayList<>();
 
+     @OneToMany(mappedBy = "user")
+     private List<UserContentEntity> userContent = new ArrayList<>();
+
+
 
      @Builder
     public UserEntity(String email, String password, String name){
@@ -66,4 +70,11 @@ public class UserEntity {
     public String getPassword(){
          return password;
      }
+
+
+     public void changeIntroduction(String introduction){
+         this.introduction = introduction;
+     }
+
+
 }
