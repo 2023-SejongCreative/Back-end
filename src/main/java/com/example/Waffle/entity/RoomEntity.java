@@ -32,6 +32,8 @@ public class RoomEntity {
     @OneToMany(mappedBy = "room")
     private List<UserRoomEntity> userRoom = new ArrayList<>();
 
+    @OneToMany(mappedBy = "room")
+    private List<NoteEntity> note = new ArrayList<>();
 
     @Builder
     public RoomEntity(String name, int type, GroupEntity group){
