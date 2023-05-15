@@ -22,7 +22,9 @@ public class NoteController {
     @ResponseBody
     public ResponseEntity<String> createNote(@PathVariable("type") String type,
                                              @PathVariable("type_id") int id,
-                                             @RequestBody Map<String, String> param){
+                                             @RequestBody Map<String, String> param,
+                                             @RequestHeader("access_token") String atk){
+
 
         LocalDate date = LocalDate.parse(param.get("date"), DateTimeFormatter.ISO_DATE);
 
@@ -30,7 +32,7 @@ public class NoteController {
                 param.get("content"), date, Integer.parseInt(param.get("notice")));
 
 
-        noteService.createNote(noteDto, type, id);
+        noteService.createNote(noteDto, type, id, atk);
 
         return ResponseEntity.ok("게시글 생성이 완료되었습니다.");
     }

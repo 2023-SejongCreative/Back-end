@@ -4,6 +4,7 @@ package com.example.Waffle.dto;
 import com.example.Waffle.entity.GroupEntity;
 import com.example.Waffle.entity.NoteEntity;
 import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class NoteDto {
 
     private GroupEntity group;
     private RoomEntity room;
+    private UserEntity user;
 
     public NoteDto(String title, String content, LocalDate date, int notice){
         this.title = title;
@@ -40,6 +42,7 @@ public class NoteDto {
                 .notice(notice)
                 .group(group)
                 .room(room)
+                .user(user)
                 .build();
 
         return noteEntity;

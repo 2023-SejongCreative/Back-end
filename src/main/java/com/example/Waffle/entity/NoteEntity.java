@@ -31,13 +31,18 @@ public class NoteEntity {
     @JoinColumn(name = "room_id")
     private RoomEntity room;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     @Builder
-    public NoteEntity(String title, String content, LocalDate date, int notice, GroupEntity group, RoomEntity room){
+    public NoteEntity(String title, String content, LocalDate date, int notice, GroupEntity group, RoomEntity room, UserEntity user){
         this.title = title;
         this.content = content;
         this.date = date;
         this.notice = notice;
         this.group = group;
         this.room = room;
+        this.user = user;
     }
 }
