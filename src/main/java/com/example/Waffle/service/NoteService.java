@@ -153,4 +153,30 @@ public class NoteService {
 
         return note.toString();
     }
+
+    @Transactional
+    public void updateNote(NoteDto noteDto, int id){
+
+        NoteEntity noteEntity = getNoteById(id);
+
+        try{
+            if(!noteDto.getTitle().equals(noteEntity.getTitle())){
+                noteEntity.changeTitle(noteDto.getTitle());
+            }
+            if(!noteDto.getContent().equals(noteEntity.getContent()) || noteDto.getContent() == null){
+                noteEntity.changeContent(noteDto.getContent());
+            }
+            if(noteDto.getDate() != noteEntity.getDate()){
+                noteEntity.changeDate(noteDto.getDate());
+            }
+            if(noteDto.getNotice() != noteEntity.getNotice()){
+                noteEntity.changeNotice(noteDto.getNotice());
+            }
+
+            noteRepository.save(noteEntity);
+
+        }catch(Exception e){
+            throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+        }
+    }
 }

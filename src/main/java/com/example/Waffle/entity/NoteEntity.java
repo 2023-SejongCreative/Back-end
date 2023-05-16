@@ -35,6 +35,23 @@ public class NoteEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    public void changeTitle(String title){
+        this.title = title;
+    }
+
+    public void changeContent(String content){
+        this.content = content;
+    }
+
+    public void changeDate(LocalDate date){
+        this.date = date;
+    }
+
+    public void changeNotice(int notice){
+        this.notice = notice;
+    }
+
+
     @Builder
     public NoteEntity(String title, String content, LocalDate date, int notice, GroupEntity group, RoomEntity room, UserEntity user){
         this.title = title;

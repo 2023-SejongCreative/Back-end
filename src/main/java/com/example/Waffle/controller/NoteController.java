@@ -60,7 +60,14 @@ public class NoteController {
 
     @PostMapping("/note/{note_id}/update")
     @ResponseBody
-    public ResponseEntity<String> updateNote(@PathVariable("note_id") int id){
+    public ResponseEntity<String> updateNote(@PathVariable("note_id") int id,
+                                             @RequestBody Map<String, String> param){
+
+        LocalDate date = LocalDate.parse(param.get("date"), DateTimeFormatter.ISO_DATE);
+
+        NoteDto noteDto = new NoteDto(param.get("title"), param.get("content"), date, Integer.parseInt(param.get("notice")));
+
+        noteService.updateNote(noteDto, id);
 
         return ResponseEntity.ok("게시글 수정에 성공하였습니다.");
     }
