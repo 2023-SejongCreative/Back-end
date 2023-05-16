@@ -14,8 +14,13 @@ import com.example.Waffle.repository.RoomRepository;
 import com.example.Waffle.repository.UserRepository;
 import com.example.Waffle.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -71,8 +76,52 @@ public class NoteService {
         }
 
         NoteEntity noteEntity = noteDto.toEntity();
-
         noteRepository.save(noteEntity);
+    }
 
+    @Transactional
+    public String getNotes(String type, int id){
+
+        JSONObject noteList = new JSONObject();
+        List<NoteEntity> noteEntities = new ArrayList<>();
+        try {
+            if (type.equals("group")) {
+
+                GroupEntity group = getGroup(id);
+                noteEntities = noteRepository.findAllByGroup(group);
+            }
+            else if (type.equals("room")) {
+
+                RoomEntity room = getRoom(id);
+                noteEntities = noteRepository.findAllByRoom(room);
+            }
+
+            JSONArray noticeArr = new JSONArray();
+            JSONArray noteArr = new JSONArray();
+
+            for(NoteEntity noteEntity : noteEntities){
+                JSONObject note = new JSONObject();
+
+                note.put("id", noteEntity.getId());
+                note.put("title", noteEntity.getTitle());
+                note.put("content", noteEntity.getContent());
+                note.put("date", noteEntity.getDate());
+
+                if(noteEntity.getNotice() == 0){
+                    noticeArr.put(note);
+                }
+                else if(noteEntity.getNotice() == 1){
+                    noteArr.put(note);
+                }
+            }
+
+            noteList.put("notices", noticeArr);
+            noteList.put("notes", noteArr);
+
+        }catch(Exception e){
+            throw new UserException(ErrorCode.CANT_FIND_NOTE);
+        }
+
+        return noteList.toString();
     }
 }

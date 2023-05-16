@@ -4,6 +4,8 @@ package com.example.Waffle.controller;
 import com.example.Waffle.dto.NoteDto;
 import com.example.Waffle.service.NoteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +41,12 @@ public class NoteController {
 
     @GetMapping("/note/{type}/{type_id}/notelist")
     @ResponseBody
-    public void getNotes(@PathVariable("type") String type,
-                                           @PathVariable("type_id") int id){
+    public ResponseEntity<Object> getNotes(@PathVariable("type") String type,
+                         @PathVariable("type_id") int id){
 
+        String noteList = noteService.getNotes(type, id);
 
+        return new ResponseEntity<>(noteList, HttpStatus.OK);
     }
 
     @GetMapping("/note/{note_id}")

@@ -23,6 +23,8 @@ public enum ErrorCode {
     CANT_FIND_SESSION(HttpStatus.BAD_REQUEST, "VIDEO-001", "해당 세션 아이디로 활성화된 세션을 찾을 수 없습니다."),
     CANT_FIND_PLAN(HttpStatus.BAD_REQUEST, "PLAN-001", "일정을 찾을 수 없습니다."),
     NO_PLAN(HttpStatus.BAD_REQUEST, "PLAN-002", "일정이 존재하지 않습니다."),
+    CANT_FIND_NOTE(HttpStatus.BAD_REQUEST, "NOTE-001", "게시글을 찾을 수 없습니다."),
+
     /*401 UNAUTHROIZED : 인증 안됨*/
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-001", "리프레시 토큰이 유효하지 않습니다."),
     CANT_USE_DM(HttpStatus.UNAUTHORIZED, "DM-006", "검증되지 않은 유저로 DM 사용이 불가합니다."),
