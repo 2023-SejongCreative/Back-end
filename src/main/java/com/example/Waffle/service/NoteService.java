@@ -179,4 +179,18 @@ public class NoteService {
             throw new UserException(ErrorCode.INTER_SERVER_ERROR);
         }
     }
+
+    @Transactional
+    public void deleteNote(int id){
+
+        try{
+
+            NoteEntity noteEntity = getNoteById(id);
+
+            noteRepository.deleteById(id);
+
+        }catch(Exception e){
+            throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+        }
+    }
 }

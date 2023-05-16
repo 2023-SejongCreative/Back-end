@@ -76,6 +76,8 @@ public class NoteController {
     @ResponseBody
     public ResponseEntity<String> deleteNote(@PathVariable("note_id") int id){
 
+        noteService.deleteNote(id);
+
         return ResponseEntity.ok("게시글 삭제가 완료되었습니다.");
     }
 }

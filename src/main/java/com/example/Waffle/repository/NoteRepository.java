@@ -19,4 +19,6 @@ public interface NoteRepository extends JpaRepository<NoteEntity, Long> {
 
     Optional<NoteEntity> findById(int id);
 
+    void deleteById(int id);
+
 }
