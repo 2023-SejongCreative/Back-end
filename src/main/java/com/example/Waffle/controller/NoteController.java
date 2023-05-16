@@ -23,7 +23,7 @@ public class NoteController {
     @PostMapping("/note/{type}/{type_id}/create")
     @ResponseBody
     public ResponseEntity<String> createNote(@PathVariable("type") String type,
-                                             @PathVariable("type_id") int id,
+                                             @PathVariable("type_id") Long id,
                                              @RequestBody Map<String, String> param,
                                              @RequestHeader("access_token") String atk){
 
@@ -42,7 +42,7 @@ public class NoteController {
     @GetMapping("/note/{type}/{type_id}/notelist")
     @ResponseBody
     public ResponseEntity<Object> getNotes(@PathVariable("type") String type,
-                         @PathVariable("type_id") int id){
+                         @PathVariable("type_id") Long id){
 
         String noteList = noteService.getNotes(type, id);
 

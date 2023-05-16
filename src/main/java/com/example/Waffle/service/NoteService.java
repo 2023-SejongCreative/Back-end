@@ -32,14 +32,14 @@ public class NoteService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public GroupEntity getGroupById(int id){
+    public GroupEntity getGroupById(Long id){
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
 
         return groupEntity;
     }
 
-    public RoomEntity getRoomById(int id){
+    public RoomEntity getRoomById(Long id){
         RoomEntity roomEntity = roomRepository.findById(id)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
 
@@ -62,7 +62,7 @@ public class NoteService {
 
 
     @Transactional
-    public void createNote(NoteDto noteDto, String type, int id, String atk){
+    public void createNote(NoteDto noteDto, String type, Long id, String atk){
 
         String email = jwtTokenProvider.getEmail(atk);
         UserEntity user = getUserByEmail(email);
@@ -87,7 +87,7 @@ public class NoteService {
     }
 
     @Transactional
-    public String getNotes(String type, int id){
+    public String getNotes(String type, Long id){
 
         JSONObject noteList = new JSONObject();
         List<NoteEntity> noteEntities = new ArrayList<>();
@@ -189,6 +189,30 @@ public class NoteService {
 
             noteRepository.deleteById(id);
 
+        }catch(Exception e){
+            throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    public void deleteAllNote(String type, Long id){
+
+        List<NoteEntity> noteEntities = new ArrayList<>();
+        try {
+            if (type.equals("group")) {
+                GroupEntity groupEntity = getGroupById(id);
+
+                noteEntities = noteRepository.findAllByGroup(groupEntity);
+
+            } else if (type.equals("room")) {
+                RoomEntity roomEntity = getRoomById(id);
+
+                noteEntities = noteRepository.findAllByRoom(roomEntity);
+            }
+
+            for (NoteEntity noteEntity : noteEntities) {
+                noteRepository.deleteById(noteEntity.getId());
+            }
         }catch(Exception e){
             throw new UserException(ErrorCode.INTER_SERVER_ERROR);
         }
