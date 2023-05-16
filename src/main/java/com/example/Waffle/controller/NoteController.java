@@ -51,8 +51,11 @@ public class NoteController {
 
     @GetMapping("/note/{note_id}")
     @ResponseBody
-    public void getNote(@PathVariable("note_id") int id){
+    public ResponseEntity<Object> getNote(@PathVariable("note_id") int id){
 
+        String note = noteService.getNote(id);
+
+        return new ResponseEntity<>(note, HttpStatus.OK);
     }
 
     @PostMapping("/note/{note_id}/update")

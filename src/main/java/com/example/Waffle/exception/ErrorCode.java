@@ -24,6 +24,7 @@ public enum ErrorCode {
     CANT_FIND_PLAN(HttpStatus.BAD_REQUEST, "PLAN-001", "일정을 찾을 수 없습니다."),
     NO_PLAN(HttpStatus.BAD_REQUEST, "PLAN-002", "일정이 존재하지 않습니다."),
     CANT_FIND_NOTE(HttpStatus.BAD_REQUEST, "NOTE-001", "게시글을 찾을 수 없습니다."),
+    NO_NOTE(HttpStatus.BAD_REQUEST, "NOTE-002", "게시글이 존재하지 않습니다."),
 
     /*401 UNAUTHROIZED : 인증 안됨*/
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-001", "리프레시 토큰이 유효하지 않습니다."),

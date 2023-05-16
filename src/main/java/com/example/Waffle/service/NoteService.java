@@ -32,25 +32,32 @@ public class NoteService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public GroupEntity getGroup(int id){
+    public GroupEntity getGroupById(int id){
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
 
         return groupEntity;
     }
 
-    public RoomEntity getRoom(int id){
+    public RoomEntity getRoomById(int id){
         RoomEntity roomEntity = roomRepository.findById(id)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
 
         return roomEntity;
     }
 
-    public UserEntity getUser(String email){
+    public UserEntity getUserByEmail(String email){
         UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
 
         return userEntity;
+    }
+
+    public NoteEntity getNoteById(int id){
+        NoteEntity noteEntity = noteRepository.findById(id)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_NOTE));
+
+        return noteEntity;
     }
 
 
@@ -58,19 +65,19 @@ public class NoteService {
     public void createNote(NoteDto noteDto, String type, int id, String atk){
 
         String email = jwtTokenProvider.getEmail(atk);
-        UserEntity user = getUser(email);
+        UserEntity user = getUserByEmail(email);
 
         noteDto.setUser(user);
 
         if(type.equals("group")){
 
-            GroupEntity group = getGroup(id);
+            GroupEntity group = getGroupById(id);
 
             noteDto.setGroup(group);
         }
         else if(type.equals("room")){
 
-            RoomEntity room = getRoom(id);
+            RoomEntity room = getRoomById(id);
 
             noteDto.setRoom(room);
         }
@@ -87,12 +94,12 @@ public class NoteService {
         try {
             if (type.equals("group")) {
 
-                GroupEntity group = getGroup(id);
+                GroupEntity group = getGroupById(id);
                 noteEntities = noteRepository.findAllByGroup(group);
             }
             else if (type.equals("room")) {
 
-                RoomEntity room = getRoom(id);
+                RoomEntity room = getRoomById(id);
                 noteEntities = noteRepository.findAllByRoom(room);
             }
 
@@ -123,5 +130,27 @@ public class NoteService {
         }
 
         return noteList.toString();
+    }
+
+    @Transactional
+    public String getNote(int id){
+
+        JSONObject note = new JSONObject();
+
+        try {
+            NoteEntity noteEntity = getNoteById(id);
+
+            note.put("title", noteEntity.getTitle());
+            note.put("content", noteEntity.getContent());
+            note.put("date", noteEntity.getDate());
+
+            UserEntity userEntity = noteEntity.getUser();
+            note.put("writer", userEntity.getEmail());
+
+        }catch (Exception e){
+            throw new UserException(ErrorCode.CANT_FIND_NOTE);
+        }
+
+        return note.toString();
     }
 }
