@@ -1,11 +1,123 @@
 package com.example.Waffle.service;
 
+import com.example.Waffle.dto.ContentDto;
+import com.example.Waffle.dto.ProfileDto;
+import com.example.Waffle.entity.UserContentEntity;
+import com.example.Waffle.entity.UserEntity;
+import com.example.Waffle.exception.ErrorCode;
+import com.example.Waffle.exception.UserException;
+import com.example.Waffle.repository.UserContentRepository;
+import com.example.Waffle.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Base64;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
+
+    private final UserRepository userRepository;
+    private final UserContentRepository userContentRepository;
+
+    @Transactional
+    public void updateProfile(MultipartFile image, String intro, String email) throws IOException {
+
+    UserEntity userEntity = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
+
+    if(image != null)
+        userEntity.changeImage(image.getBytes());
+    else if(userEntity.getImage() != null)
+        userEntity.changeImage(null);
+
+    userEntity.changeIntroductuon(intro);
+
+    userRepository.save(userEntity);
+
+    }
+
+    public ProfileDto returnProfile(Long id){
+        ProfileDto profileDto = new ProfileDto();
+
+
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(()->new UserException(ErrorCode.NO_USER));
+
+        profileDto.setName(userEntity.getName());
+        profileDto.setIntroduction(userEntity.getIntroduction());
+
+        byte[] imageData = userEntity.getImage();
+
+        String imageBase64 = Base64.getEncoder().encodeToString(imageData);
+
+        profileDto.setImg(imageBase64);
+        profileDto.setContent(contentList(userEntity));
+
+        return profileDto;
+    }
+
+    @Transactional
+    public void createContent(String email, String title, String detail){
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserException(ErrorCode.NO_USER));
+
+        ContentDto contentDto = new ContentDto(title, detail, userEntity);
+        UserContentEntity userContentEntity = contentDto.toEntity();
+
+        userContentRepository.save(userContentEntity);
+
+    }
+
+    @Transactional
+    public void updateContent(Long id, String title, String detail){
+        UserContentEntity userContentEntity = userContentRepository.findById(id)
+                .orElseThrow(()->new UserException(ErrorCode.NO_CONTENT));
+
+        userContentEntity.changeTitleAndDetail(title, detail);
+
+    }
+
+    @Transactional
+    public void deleteContent(Long id){
+        UserContentEntity userContentEntity = userContentRepository.findById(id)
+                .orElseThrow(()->new UserException(ErrorCode.NO_CONTENT));
+
+        userContentRepository.deleteById(id);
+    }
+
+    public Long emailToId(String email){
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserException(ErrorCode.NO_USER));
+
+        return userEntity.getId();
+    }
+
+    public String contentList(UserEntity userEntity){
+
+        JSONObject contentList = new JSONObject();
+        try {
+            List<UserContentEntity> userContentEntities = userContentRepository.findAllByUserId(userEntity.getId());
+            JSONArray contentArr = new JSONArray();
+            for(UserContentEntity contentEntity : userContentEntities){
+                JSONObject content = new JSONObject();
+                content.put("id", contentEntity.getId());
+                content.put("title",contentEntity.getTitle());
+                content.put("detail",contentEntity.getDetail());
+                contentArr.put(content);
+            }
+            contentList.put("content",contentArr);
+        }catch (Exception e){
+            throw new UserException(ErrorCode.CANT_FIND_CONTENT);
+        }
+
+        return contentList.toString();
+    }
 
 }

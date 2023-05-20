@@ -30,11 +30,16 @@ public class UserEntity {
 
      private String introduction;
 
-     @Column(name = "img_path")
-     private String imgPath;
+     @Column(name = "image")
+     private byte[] image;
 
-     @Column(name = "img_name")
-     private String imgName;
+     public void changeIntroductuon(String introduction){
+         this.introduction = introduction;
+     }
+
+     public void changeImage(byte[] image){
+         this.image = image;
+     }
 
      @OneToMany(mappedBy = "user")
      private List<UserGroupEntity> userGroup = new ArrayList<>();

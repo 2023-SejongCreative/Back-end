@@ -23,7 +23,18 @@ public class UserContentEntity {
     private UserEntity user;
 
 
+    public void changeTitleAndDetail(String title, String detail){
+        if(!this.title.equals(title) && title != null)
+            this.title = title;
 
+        if(this.detail != null) {
+            if (!this.detail.equals(detail))
+                this.detail = detail;
+        }
+        else
+            if(detail != null)
+                this.detail = detail;
+    }
 
     @Builder
     public UserContentEntity(String title, String detail, UserEntity user){
