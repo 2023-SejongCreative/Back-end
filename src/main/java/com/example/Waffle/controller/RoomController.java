@@ -35,7 +35,6 @@ public class RoomController {
                                            @RequestHeader("access_token") String accessToken){
 
 
-        System.out.println(groupId);
 
         String roomList = roomService.roomList(accessToken, groupId);
 

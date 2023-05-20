@@ -33,6 +33,7 @@ public class RoomService {
     private final UserRoomRepository userRoomRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PlanService planService;
+    private final NoteService noteService;
 
     @Transactional
     public Long createRoom(RoomDto roomDto, String accessToken, int groupId){
@@ -156,6 +157,9 @@ public class RoomService {
 
             //room에 속한 plan 모두 삭제
             planService.allDeletePlan("room", roomId);
+
+            //room에 속한 note 모두 삭제
+            noteService.deleteAllNote("room", roomId);
 
             userRoomRepository.deleteByRoomId(roomEntity.getId());
 

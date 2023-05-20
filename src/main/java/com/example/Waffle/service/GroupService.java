@@ -28,6 +28,7 @@ public class GroupService {
     private final UserGroupRepository userGroupRepository;
     private final RoomService roomService;
     private final PlanService planService;
+    private final NoteService noteService;
     @Transactional
     public Long createGroup(String email, GroupDto groupDto){
 
@@ -100,6 +101,9 @@ public class GroupService {
 
             //group의 plan 전부 삭제
             planService.allDeletePlan("group", groupEntity.getId());
+
+            //group의 note 전부 삭제
+            noteService.deleteAllNote("group", groupEntity.getId());
 
             List<RoomEntity> roomEntities = roomService.getRooms(groupEntity);
 
