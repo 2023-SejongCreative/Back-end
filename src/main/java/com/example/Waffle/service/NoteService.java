@@ -81,6 +81,9 @@ public class NoteService {
 
             noteDto.setRoom(room);
         }
+        else{
+            throw new UserException(ErrorCode.BAD_REQUEST);
+        }
 
         NoteEntity noteEntity = noteDto.toEntity();
         noteRepository.save(noteEntity);
@@ -101,6 +104,9 @@ public class NoteService {
 
                 RoomEntity room = getRoomById(id);
                 noteEntities = noteRepository.findAllByRoom(room);
+            }
+            else{
+                throw new UserException(ErrorCode.BAD_REQUEST);
             }
 
             JSONArray noticeArr = new JSONArray();
@@ -145,7 +151,8 @@ public class NoteService {
             note.put("date", noteEntity.getDate());
 
             UserEntity userEntity = noteEntity.getUser();
-            note.put("writer", userEntity.getEmail());
+            note.put("writer", userEntity.getName());
+            note.put("id", userEntity.getId());
 
         }catch (Exception e){
             throw new UserException(ErrorCode.CANT_FIND_NOTE);

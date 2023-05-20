@@ -42,9 +42,14 @@ public class NoteController {
     @GetMapping("/note/{type}/{type_id}/notelist")
     @ResponseBody
     public ResponseEntity<Object> getNotes(@PathVariable("type") String type,
-                         @PathVariable("type_id") Long id){
+                         @PathVariable("type_id") int intId){
 
+        Long id = Long.valueOf(intId);
+
+        System.out.println(type);
+        System.out.println(id);
         String noteList = noteService.getNotes(type, id);
+        System.out.println(noteList);
 
         return new ResponseEntity<>(noteList, HttpStatus.OK);
     }
@@ -66,6 +71,7 @@ public class NoteController {
         LocalDate date = LocalDate.parse(param.get("date"), DateTimeFormatter.ISO_DATE);
 
         NoteDto noteDto = new NoteDto(param.get("title"), param.get("content"), date, Integer.parseInt(param.get("notice")));
+        System.out.println(param.get("notice"));
 
         noteService.updateNote(noteDto, id);
 
