@@ -24,6 +24,8 @@ public enum ErrorCode {
     CANT_FIND_SESSION(HttpStatus.BAD_REQUEST, "VIDEO-001", "해당 세션 아이디로 활성화된 세션을 찾을 수 없습니다."),
     CANT_FIND_PLAN(HttpStatus.BAD_REQUEST, "PLAN-001", "일정을 찾을 수 없습니다."),
     NO_PLAN(HttpStatus.BAD_REQUEST, "PLAN-002", "일정이 존재하지 않습니다."),
+    CANT_FIND_CONTENT(HttpStatus.BAD_REQUEST, "CONTENT-001", "content 목록을 반환할 수 없습니다."),
+    NO_CONTENT(HttpStatus.BAD_REQUEST, "CONTETN-002", "content가 존재하지 않습니다."),
     CANT_FIND_NOTE(HttpStatus.BAD_REQUEST, "NOTE-001", "게시글을 찾을 수 없습니다."),
     NO_NOTE(HttpStatus.BAD_REQUEST, "NOTE-002", "게시글이 존재하지 않습니다."),
 
