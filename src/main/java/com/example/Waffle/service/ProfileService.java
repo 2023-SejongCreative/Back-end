@@ -43,12 +43,13 @@ public class ProfileService {
 
     }
 
-    public ProfileDto returnProfile(Long id){
+    public String returnProfile(Long id){
         ProfileDto profileDto = new ProfileDto();
 
 
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(()->new UserException(ErrorCode.NO_USER));
+
 
         profileDto.setName(userEntity.getName());
         profileDto.setIntroduction(userEntity.getIntroduction());
@@ -58,9 +59,31 @@ public class ProfileService {
         String imageBase64 = Base64.getEncoder().encodeToString(imageData);
 
         profileDto.setImg(imageBase64);
-        profileDto.setContent(contentList(userEntity));
 
-        return profileDto;
+
+        JSONObject contentList = new JSONObject();
+        try {
+            List<UserContentEntity> userContentEntities = userContentRepository.findAllByUserId(userEntity.getId());
+            JSONArray contentArr = new JSONArray();
+            for(UserContentEntity contentEntity : userContentEntities){
+                JSONObject content = new JSONObject();
+                content.put("id", contentEntity.getId());
+                content.put("title",contentEntity.getTitle());
+                content.put("detail",contentEntity.getDetail());
+                contentArr.put(content);
+            }
+            contentList.put("content",contentArr);
+        }catch (Exception e){
+            throw new UserException(ErrorCode.CANT_FIND_CONTENT);
+        }
+
+        contentList.put("name", userEntity.getName());
+        contentList.put("introduction",userEntity.getIntroduction());
+        contentList.put("img",imageBase64);
+
+        profileDto.setContent(contentList.toString());
+
+        return contentList.toString();
     }
 
     @Transactional
