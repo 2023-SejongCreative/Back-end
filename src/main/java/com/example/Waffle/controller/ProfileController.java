@@ -26,13 +26,12 @@ public class ProfileController {
     private final UserRepository userRepository;
 
     @PostMapping("/profile/update")
-    public ResponseEntity<Object> updateProfile(@RequestParam(value = "img", required = false) MultipartFile image,
-                                                @RequestParam(value = "introduction", required = false  ) String intro,
+    public ResponseEntity<Object> updateProfile(@RequestBody Map<String, String> param,
                                                 @RequestHeader("access_token") String accessToken) throws IOException {
 
         String email = jwtTokenProvider.getEmail(accessToken);
 
-        profileService.updateProfile(image, intro, email);
+        profileService.updateProfile(param.get("img"), param.get("introduction"), email);
 
 
         return new ResponseEntity<>("프로필 수정 성공", HttpStatus.OK);
