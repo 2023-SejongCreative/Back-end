@@ -44,7 +44,7 @@ public class ProfileController {
         String email = jwtTokenProvider.getEmail(accessToken);
         Long id = profileService.emailToId(email);
 
-        ProfileDto profileDto = profileService.returnProfile(id);
+        String profileDto = profileService.returnProfile(id);
 
         return new ResponseEntity<>(profileDto, HttpStatus.OK);
 
@@ -53,7 +53,7 @@ public class ProfileController {
     @GetMapping("/profile/other/{user_id}")
     public ResponseEntity<Object> otherProfile(@PathVariable("user_id") Long id){
 
-        ProfileDto profileDto = profileService.returnProfile(id);
+        String profileDto = profileService.returnProfile(id);
 
         return new ResponseEntity<>(profileDto,HttpStatus.OK);
     }
