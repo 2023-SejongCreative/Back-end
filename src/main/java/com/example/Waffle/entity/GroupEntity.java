@@ -30,6 +30,9 @@ public class GroupEntity {
     @OneToMany(mappedBy = "group")
     private List<PlanEntity> plan = new ArrayList<>();
 
+    @OneToMany(mappedBy = "group")
+    private List<NoteEntity> note = new ArrayList<>();
+
     @Builder
     public GroupEntity(String name){
         this.name = name;

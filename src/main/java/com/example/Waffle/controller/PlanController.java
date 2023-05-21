@@ -28,8 +28,8 @@ public class PlanController {
 
         PlanDto planDto = new PlanDto(param.get("title"), param.get("content"));
 
-        planDto.setStartDate(param.get("start_date"));
-        planDto.setEndDate(param.get("end_date"));
+        planDto.setStartDate(param.get("start"));
+        planDto.setEndDate(param.get("end"));
         planDto.stringToIntState(param.get("state"));
         planService.createPlan(planDto,type,typeId);
 
@@ -55,8 +55,8 @@ public class PlanController {
 
 
         PlanDto planDto = new PlanDto(param.get("title"), param.get("content"));
-        planDto.setStartDate(param.get("start_date"));
-        planDto.setEndDate(param.get("end_date"));
+        planDto.setStartDate(param.get("start"));
+        planDto.setEndDate(param.get("end"));
         planDto.stringToIntState(param.get("state"));
 
         planService.updatePlan(planDto,planId);

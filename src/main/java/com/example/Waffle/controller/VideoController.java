@@ -93,39 +93,39 @@ public class VideoController {
         return ResponseEntity.ok("채팅방에서 나갔습니다.");
     }
 
-   /*-----test 용------*/
-    @PostMapping("/api/sessions")
-    @ResponseBody
-    public ResponseEntity<Object> initialize(@RequestBody Map<String, String> param)
-            throws OpenViduJavaClientException, OpenViduHttpException {
-
-        SessionProperties properties = SessionProperties.fromJson(param).build();
-        Session session = this.openvidu.createSession(properties);
-
-        System.out.println("[" + session.getSessionId());
-
-        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
-    }
-
-    @PostMapping("/api/sessions/{sessionId}/connections")
-    @ResponseBody
-    public ResponseEntity<Object> connection(@PathVariable("sessionId") String sessionId,
-                                                   @RequestBody Map<String, String> param)
-            throws OpenViduJavaClientException, OpenViduHttpException {
-
-        Session session = openvidu.getActiveSession(sessionId);
-        if (session == null) {
-            throw new UserException(ErrorCode.CANT_FIND_SESSION);
-        }
-
-        ConnectionProperties properties = ConnectionProperties.fromJson(param).build();
-        //해당 세션에 유저를 연결
-        Connection connection = session.createConnection(properties);
-
-        String url = connection.getToken();
-        System.out.println(url);
-
-        return new ResponseEntity<>(url, HttpStatus.OK);
-    }
+//   /*-----test 용------*/
+//    @PostMapping("/api/sessions")
+//    @ResponseBody
+//    public ResponseEntity<Object> initialize(@RequestBody Map<String, String> param)
+//            throws OpenViduJavaClientException, OpenViduHttpException {
+//
+//        SessionProperties properties = SessionProperties.fromJson(param).build();
+//        Session session = this.openvidu.createSession(properties);
+//
+//        System.out.println("[" + session.getSessionId());
+//
+//        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+//    }
+//
+//    @PostMapping("/api/sessions/{sessionId}/connections")
+//    @ResponseBody
+//    public ResponseEntity<Object> connection(@PathVariable("sessionId") String sessionId,
+//                                                   @RequestBody Map<String, String> param)
+//            throws OpenViduJavaClientException, OpenViduHttpException {
+//
+//        Session session = openvidu.getActiveSession(sessionId);
+//        if (session == null) {
+//            throw new UserException(ErrorCode.CANT_FIND_SESSION);
+//        }
+//
+//        ConnectionProperties properties = ConnectionProperties.fromJson(param).build();
+//        //해당 세션에 유저를 연결
+//        Connection connection = session.createConnection(properties);
+//
+//        String url = connection.getToken();
+//        System.out.println(url);
+//
+//        return new ResponseEntity<>(url, HttpStatus.OK);
+//    }
 
 }
