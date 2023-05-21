@@ -31,13 +31,13 @@ public class UserEntity {
      private String introduction;
 
      @Column(name = "image")
-     private byte[] image;
+     private String image;
 
      public void changeIntroductuon(String introduction){
          this.introduction = introduction;
      }
 
-     public void changeImage(byte[] image){
+     public void changeImage(String image){
          this.image = image;
      }
 

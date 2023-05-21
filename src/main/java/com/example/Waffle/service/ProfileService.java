@@ -13,10 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -27,13 +23,13 @@ public class ProfileService {
     private final UserContentRepository userContentRepository;
 
     @Transactional
-    public void updateProfile(MultipartFile image, String intro, String email) throws IOException {
+    public void updateProfile(String image, String intro, String email){
 
     UserEntity userEntity = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
 
     if(image != null)
-        userEntity.changeImage(image.getBytes());
+        userEntity.changeImage(image);
     else if(userEntity.getImage() != null)
         userEntity.changeImage(null);
 
@@ -44,22 +40,9 @@ public class ProfileService {
     }
 
     public String returnProfile(Long id){
-        ProfileDto profileDto = new ProfileDto();
-
 
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(()->new UserException(ErrorCode.NO_USER));
-
-
-        profileDto.setName(userEntity.getName());
-        profileDto.setIntroduction(userEntity.getIntroduction());
-
-        byte[] imageData = userEntity.getImage();
-
-        String imageBase64 = Base64.getEncoder().encodeToString(imageData);
-
-        profileDto.setImg(imageBase64);
-
 
         JSONObject contentList = new JSONObject();
         try {
@@ -79,10 +62,15 @@ public class ProfileService {
 
         contentList.put("name", userEntity.getName());
         contentList.put("introduction",userEntity.getIntroduction());
-        contentList.put("img",imageBase64);
+//        if(!ObjectUtils.isEmpty(userEntity.getImage())){
+//            String imageData = userEntity.getImage();
+//
+//            String imageBase64 = Base64.getEncoder().encodeToString(imageData);
+//
+//            contentList.put("img",imageBase64);
+//        }
 
-        profileDto.setContent(contentList.toString());
-
+        contentList.put("img",userEntity.getImage());
         return contentList.toString();
     }
 
