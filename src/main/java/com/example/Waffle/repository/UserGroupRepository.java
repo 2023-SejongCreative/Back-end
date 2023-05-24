@@ -15,5 +15,5 @@ public interface UserGroupRepository extends JpaRepository<UserGroupEntity, User
 
     Optional<UserGroupEntity> findByUserIdAndGroupId(Long userId, Long groupId);
 
-    Optional<UserGroupEntity> deleteByGroupId(int groupId);
+    Optional<UserGroupEntity> deleteByGroupId(Long groupId);
 }

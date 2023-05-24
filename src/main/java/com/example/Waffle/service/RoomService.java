@@ -62,11 +62,6 @@ public class RoomService {
         return roomEntity.getId();
     }
 
-    @Transactional
-    public List<RoomEntity> getRooms(GroupEntity groupEntity){
-        return roomRepository.findAllByGroup(groupEntity);
-    }
-
     public String roomList(String accessToken, int groupId){
 
         // Access Token 에서 User email 을 가져오기
@@ -85,7 +80,7 @@ public class RoomService {
         JSONObject roomList = new JSONObject();
         try{
             //groupId로 해당 group의 룸 조회
-            List<RoomEntity> roomEntities = getRooms(groupEntity);
+            List<RoomEntity> roomEntities = roomRepository.findAllByGroup(groupEntity);
 
             JSONArray roomArr = new JSONArray();
 
@@ -169,5 +164,19 @@ public class RoomService {
             throw new UserException(ErrorCode.INTER_SERVER_ERROR);
         }
 
+    }
+
+    @Transactional
+    public void deleteAllRoom(GroupEntity groupEntity){
+
+        try {
+            List<RoomEntity> roomEntities = roomRepository.findAllByGroup(groupEntity);
+
+            for (RoomEntity roomEntity : roomEntities) {
+                deleteRoom(roomEntity.getId());
+            }
+        }catch(Exception e){
+            throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+        }
     }
 }
