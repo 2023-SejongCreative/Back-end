@@ -2,10 +2,10 @@ package com.example.Waffle.service;
 
 import com.example.Waffle.dto.GroupDto;
 import com.example.Waffle.dto.UserGroupDto;
-import com.example.Waffle.entity.GroupEntity;
-import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.entity.UserGroup.UserGroupEntity;
+import com.example.Waffle.entity.Group.UserGroupEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import com.example.Waffle.repository.GroupRepository;
@@ -71,7 +71,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void inviteUser(int groupId, String email){
+    public void inviteUser(Long groupId, String email){
 
         UserEntity userEntity = userRepository.findByemail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
@@ -93,7 +93,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void deleteGroup(int groupId){
+    public void deleteGroup(Long groupId){
 
         try {
             GroupEntity groupEntity = groupRepository.findById(groupId)
@@ -105,11 +105,8 @@ public class GroupService {
             //group의 note 전부 삭제
             noteService.deleteAllNote("group", groupEntity.getId());
 
-            List<RoomEntity> roomEntities = roomService.getRooms(groupEntity);
-
-            for (RoomEntity roomEntity : roomEntities) {
-                roomService.deleteRoom(roomEntity.getId());
-            }
+            //group의 room 전부 삭제
+            roomService.deleteAllRoom(groupEntity);
 
             userGroupRepository.deleteByGroupId(groupId);
             groupRepository.deleteById(groupId);

@@ -3,10 +3,10 @@ package com.example.Waffle.service;
 
 import com.example.Waffle.dto.RoomDto;
 import com.example.Waffle.dto.UserRoomDto;
-import com.example.Waffle.entity.GroupEntity;
-import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.entity.UserRoom.UserRoomEntity;
+import com.example.Waffle.entity.Room.UserRoomEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import com.example.Waffle.repository.GroupRepository;
@@ -36,7 +36,7 @@ public class RoomService {
     private final NoteService noteService;
 
     @Transactional
-    public Long createRoom(RoomDto roomDto, String accessToken, int groupId){
+    public Long createRoom(RoomDto roomDto, String accessToken, Long groupId){
         // Access Token 에서 User email 을 가져오기
         String email = jwtTokenProvider.getEmail(accessToken);
 
@@ -62,12 +62,7 @@ public class RoomService {
         return roomEntity.getId();
     }
 
-    @Transactional
-    public List<RoomEntity> getRooms(GroupEntity groupEntity){
-        return roomRepository.findAllByGroup(groupEntity);
-    }
-
-    public String roomList(String accessToken, int groupId){
+    public String roomList(String accessToken, Long groupId){
 
         // Access Token 에서 User email 을 가져오기
         String email = jwtTokenProvider.getEmail(accessToken);
@@ -85,7 +80,7 @@ public class RoomService {
         JSONObject roomList = new JSONObject();
         try{
             //groupId로 해당 group의 룸 조회
-            List<RoomEntity> roomEntities = getRooms(groupEntity);
+            List<RoomEntity> roomEntities = roomRepository.findAllByGroup(groupEntity);
 
             JSONArray roomArr = new JSONArray();
 
@@ -119,7 +114,7 @@ public class RoomService {
     }
 
     @Transactional
-    public void inviteUser(int roomId, String email){
+    public void inviteUser(Long roomId, String email){
 
         //email로 user 정보 찾기
         UserEntity userEntity = userRepository.findByemail(email).orElseThrow(
@@ -169,5 +164,19 @@ public class RoomService {
             throw new UserException(ErrorCode.INTER_SERVER_ERROR);
         }
 
+    }
+
+    @Transactional
+    public void deleteAllRoom(GroupEntity groupEntity){
+
+        try {
+            List<RoomEntity> roomEntities = roomRepository.findAllByGroup(groupEntity);
+
+            for (RoomEntity roomEntity : roomEntities) {
+                deleteRoom(roomEntity.getId());
+            }
+        }catch(Exception e){
+            throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+        }
     }
 }

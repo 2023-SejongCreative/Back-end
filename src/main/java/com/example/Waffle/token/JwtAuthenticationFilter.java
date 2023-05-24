@@ -32,11 +32,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("request null");
         }
 
-        System.out.println("----------header start-----------");
-        request.getHeaderNames().asIterator().forEachRemaining(
-                headerName -> System.out.println(headerName + ": " + request.getHeader(headerName))
-        );
-        System.out.println("----------header end----------");
+        /*----header 출력용----*/
+//        System.out.println("----------header start-----------");
+//        request.getHeaderNames().asIterator().forEachRemaining(
+//                headerName -> System.out.println(headerName + ": " + request.getHeader(headerName))
+//        );
+//        System.out.println("----------header end----------");
 
         // 헤더에서 JWT 토큰 받아오기
         String accessToken = jwtTokenProvider.resolveToken(request, "access_token");
@@ -63,14 +64,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     // SecurityContext 에 객체 저장
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
+                //ATK가 유효하지만 로그아웃된 ATK일 경우
+                else throw new UserException(ErrorCode.IS_LOGOUT);
             }
             // 어세스 토큰이 만료된 상황 && 리프레시 토큰 또한 존재하는 상황
             else if (refreshToken != null) {
-                // 리프레시 토큰이 만료
-                if (!jwtTokenProvider.validateToken(refreshToken)) {
-                    throw new UserException(ErrorCode.UNAUTHORIZED);
+                // 리프레시 토큰 만료 X
+                if (jwtTokenProvider.validateToken(refreshToken)) {
+
+                    String email = jwtTokenProvider.getEmail(refreshToken);
+
+                    //redis에 저장된 RTK와 똑같은지 확인
+                    String redisRefreshToken = (String)redisTemplate.opsForValue().get("RT:" + email);
+
+                    //redis에 존재
+                    if(!ObjectUtils.isEmpty(redisRefreshToken)){
+                        //redis에 있는 것과 다름
+                        if(!redisRefreshToken.equals(refreshToken)) {
+                            throw new UserException(ErrorCode.UNAUTHORIZED);
+                        }
+                    }
                 }
+                else throw new UserException(ErrorCode.UNAUTHORIZED);
             }
+            //atk 유효하지 않고, rtk가 없을 경우
+            else throw new UserException(ErrorCode.UNAUTHORIZED);
+        }
+        //atk가 없을 경우
+        else{
+            throw new UserException(ErrorCode.NO_ATK);
         }
 
         // 다음 Filter 실행

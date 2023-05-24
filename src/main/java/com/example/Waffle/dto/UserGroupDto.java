@@ -1,9 +1,9 @@
 package com.example.Waffle.dto;
 
 
-import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
 import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.entity.UserGroup.UserGroupEntity;
+import com.example.Waffle.entity.Group.UserGroupEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

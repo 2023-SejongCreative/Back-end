@@ -35,9 +35,10 @@ public class GroupController {
     }
 
     @PostMapping("/{group_id}/invitegroup")
-    public ResponseEntity<Object> inviteUser(@PathVariable("group_id") int groupId,
+    public ResponseEntity<Object> inviteUser(@PathVariable("group_id") int intId,
                                              @RequestBody Map<String, String> param){
 
+        Long groupId = Long.valueOf(intId);
 
         String email = param.get("email");
         groupService.inviteUser(groupId, email);
@@ -46,7 +47,9 @@ public class GroupController {
     }
 
     @DeleteMapping("/{group_id}/deletegroup")
-    public ResponseEntity<Object> deleteGroup(@PathVariable("group_id") int groupId){
+    public ResponseEntity<Object> deleteGroup(@PathVariable("group_id") int intId){
+
+        Long groupId = Long.valueOf(intId);
 
         //반복문으로 룸 지우기
 

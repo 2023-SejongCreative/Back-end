@@ -1,8 +1,7 @@
 package com.example.Waffle.repository;
 
-import com.example.Waffle.entity.GroupEntity;
-import com.example.Waffle.entity.RoomEntity;
-import org.aspectj.apache.bcel.classfile.Module;
+import com.example.Waffle.entity.Group.GroupEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +13,5 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
 
     List<RoomEntity> findAllByGroup(GroupEntity groupEntity);
 
-    Optional<RoomEntity> findById(int roomId);
+    Optional<RoomEntity> findById(Long roomId);
 }

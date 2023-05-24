@@ -2,9 +2,9 @@ package com.example.Waffle.service;
 
 
 import com.example.Waffle.dto.NoteDto;
-import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
 import com.example.Waffle.entity.NoteEntity;
-import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
@@ -32,52 +32,27 @@ public class NoteService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public GroupEntity getGroupById(Long id){
-        GroupEntity groupEntity = groupRepository.findById(id)
-                .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
-
-        return groupEntity;
-    }
-
-    public RoomEntity getRoomById(Long id){
-        RoomEntity roomEntity = roomRepository.findById(id)
-                .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
-
-        return roomEntity;
-    }
-
-    public UserEntity getUserByEmail(String email){
-        UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
-
-        return userEntity;
-    }
-
-    public NoteEntity getNoteById(int id){
-        NoteEntity noteEntity = noteRepository.findById(id)
-                .orElseThrow(() -> new UserException(ErrorCode.NO_NOTE));
-
-        return noteEntity;
-    }
-
 
     @Transactional
     public void createNote(NoteDto noteDto, String type, Long id, String atk){
 
         String email = jwtTokenProvider.getEmail(atk);
-        UserEntity user = getUserByEmail(email);
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
 
         noteDto.setUser(user);
 
         if(type.equals("group")){
 
-            GroupEntity group = getGroupById(id);
+            GroupEntity group = groupRepository.findById(id)
+                    .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
 
             noteDto.setGroup(group);
         }
         else if(type.equals("room")){
 
-            RoomEntity room = getRoomById(id);
+            RoomEntity room = roomRepository.findById(id)
+                    .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
 
             noteDto.setRoom(room);
         }
@@ -96,14 +71,10 @@ public class NoteService {
         List<NoteEntity> noteEntities = new ArrayList<>();
         try {
             if (type.equals("group")) {
-
-                GroupEntity group = getGroupById(id);
-                noteEntities = noteRepository.findAllByGroup(group);
+                noteEntities = noteRepository.findAllByGroupId(id);
             }
             else if (type.equals("room")) {
-
-                RoomEntity room = getRoomById(id);
-                noteEntities = noteRepository.findAllByRoom(room);
+                noteEntities = noteRepository.findAllByRoomId(id);
             }
             else{
                 throw new UserException(ErrorCode.BAD_REQUEST);
@@ -144,7 +115,8 @@ public class NoteService {
         JSONObject note = new JSONObject();
 
         try {
-            NoteEntity noteEntity = getNoteById(id);
+            NoteEntity noteEntity = noteRepository.findById(id)
+                    .orElseThrow(() -> new UserException(ErrorCode.NO_NOTE));
 
             note.put("title", noteEntity.getTitle());
             note.put("content", noteEntity.getContent());
@@ -164,7 +136,8 @@ public class NoteService {
     @Transactional
     public void updateNote(NoteDto noteDto, int id){
 
-        NoteEntity noteEntity = getNoteById(id);
+        NoteEntity noteEntity = noteRepository.findById(id)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_NOTE));
 
         try{
             if(!noteDto.getTitle().equals(noteEntity.getTitle())){
@@ -192,9 +165,10 @@ public class NoteService {
 
         try{
 
-            NoteEntity noteEntity = getNoteById(id);
+            NoteEntity noteEntity = noteRepository.findById(id)
+                    .orElseThrow(() -> new UserException(ErrorCode.NO_NOTE));
 
-            noteRepository.deleteById(id);
+            noteRepository.deleteById(noteEntity.getId());
 
         }catch(Exception e){
             throw new UserException(ErrorCode.INTER_SERVER_ERROR);
@@ -207,14 +181,11 @@ public class NoteService {
         List<NoteEntity> noteEntities = new ArrayList<>();
         try {
             if (type.equals("group")) {
-                GroupEntity groupEntity = getGroupById(id);
-
-                noteEntities = noteRepository.findAllByGroup(groupEntity);
+                noteEntities = noteRepository.findAllByGroupId(id);
 
             } else if (type.equals("room")) {
-                RoomEntity roomEntity = getRoomById(id);
 
-                noteEntities = noteRepository.findAllByRoom(roomEntity);
+                noteEntities = noteRepository.findAllByRoomId(id);
             }
 
             for (NoteEntity noteEntity : noteEntities) {

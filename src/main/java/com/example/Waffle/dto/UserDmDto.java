@@ -3,7 +3,6 @@ package com.example.Waffle.dto;
 import com.example.Waffle.entity.DM.DmEntity;
 import com.example.Waffle.entity.DM.UserDmEntity;
 import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.entity.UserGroup.UserGroupEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
