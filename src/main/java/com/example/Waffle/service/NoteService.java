@@ -32,52 +32,27 @@ public class NoteService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public GroupEntity getGroupById(Long id){
-        GroupEntity groupEntity = groupRepository.findById(id)
-                .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
-
-        return groupEntity;
-    }
-
-    public RoomEntity getRoomById(Long id){
-        RoomEntity roomEntity = roomRepository.findById(id)
-                .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
-
-        return roomEntity;
-    }
-
-    public UserEntity getUserByEmail(String email){
-        UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
-
-        return userEntity;
-    }
-
-    public NoteEntity getNoteById(int id){
-        NoteEntity noteEntity = noteRepository.findById(id)
-                .orElseThrow(() -> new UserException(ErrorCode.NO_NOTE));
-
-        return noteEntity;
-    }
-
 
     @Transactional
     public void createNote(NoteDto noteDto, String type, Long id, String atk){
 
         String email = jwtTokenProvider.getEmail(atk);
-        UserEntity user = getUserByEmail(email);
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
 
         noteDto.setUser(user);
 
         if(type.equals("group")){
 
-            GroupEntity group = getGroupById(id);
+            GroupEntity group = groupRepository.findById(id)
+                    .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
 
             noteDto.setGroup(group);
         }
         else if(type.equals("room")){
 
-            RoomEntity room = getRoomById(id);
+            RoomEntity room = roomRepository.findById(id)
+                    .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
 
             noteDto.setRoom(room);
         }
@@ -140,7 +115,8 @@ public class NoteService {
         JSONObject note = new JSONObject();
 
         try {
-            NoteEntity noteEntity = getNoteById(id);
+            NoteEntity noteEntity = noteRepository.findById(id)
+                    .orElseThrow(() -> new UserException(ErrorCode.NO_NOTE));
 
             note.put("title", noteEntity.getTitle());
             note.put("content", noteEntity.getContent());
@@ -160,7 +136,8 @@ public class NoteService {
     @Transactional
     public void updateNote(NoteDto noteDto, int id){
 
-        NoteEntity noteEntity = getNoteById(id);
+        NoteEntity noteEntity = noteRepository.findById(id)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_NOTE));
 
         try{
             if(!noteDto.getTitle().equals(noteEntity.getTitle())){
@@ -188,9 +165,10 @@ public class NoteService {
 
         try{
 
-            NoteEntity noteEntity = getNoteById(id);
+            NoteEntity noteEntity = noteRepository.findById(id)
+                    .orElseThrow(() -> new UserException(ErrorCode.NO_NOTE));
 
-            noteRepository.deleteById(id);
+            noteRepository.deleteById(noteEntity.getId());
 
         }catch(Exception e){
             throw new UserException(ErrorCode.INTER_SERVER_ERROR);
