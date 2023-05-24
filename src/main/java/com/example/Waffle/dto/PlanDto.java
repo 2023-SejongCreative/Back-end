@@ -32,6 +32,14 @@ public class PlanDto {
         this.content = content;
     }
 
+    public PlanDto(String title, String content, String startDate, String endDate, String state){
+        this.title = title;
+        this.content = content;
+        setStartDate(startDate);
+        setEndDate(endDate);
+        stringToIntState(state);
+    }
+
     public void stringToIntState(String state){
         if(state !=null) {
             if (state.equals("미완료"))
