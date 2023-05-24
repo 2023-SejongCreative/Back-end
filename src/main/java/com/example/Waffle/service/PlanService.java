@@ -30,38 +30,30 @@ public class PlanService {
     @Transactional
     public void createPlan(PlanDto planDto, String type, Long typeId) {
 
+        planDto.setUser(null);
+        planDto.setGroup(null);
+        planDto.setRoom(null);
 
-        if (type.equals("home")) {
-            UserEntity user = userRepository.findById(typeId)
-                    .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
-
-            planDto.setUser(user);
-            planDto.setGroup(null);
-            planDto.setRoom(null);
-
-            PlanEntity planEntity = planDto.toEntity();
-            planRepository.save(planEntity);
-        } else if (type.equals("group")) {
-            GroupEntity group = groupRepository.findById(typeId)
-                    .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
-
-            planDto.setUser(null);
-            planDto.setGroup(group);
-            planDto.setRoom(null);
-
-            PlanEntity planEntity = planDto.toEntity();
-            planRepository.save(planEntity);
-        } else if (type.equals("room")) {
-            RoomEntity room = roomRepository.findById(typeId)
-                    .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
-
-            planDto.setUser(null);
-            planDto.setGroup(null);
-            planDto.setRoom(room);
-
-            PlanEntity planEntity = planDto.toEntity();
-            planRepository.save(planEntity);
+        switch (type) {
+            case "home" -> {
+                UserEntity user = userRepository.findById(typeId)
+                        .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
+                planDto.setUser(user);
+            }
+            case "group" -> {
+                GroupEntity group = groupRepository.findById(typeId)
+                        .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
+                planDto.setGroup(group);
+            }
+            case "room" -> {
+                RoomEntity room = roomRepository.findById(typeId)
+                        .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
+                planDto.setRoom(room);
+            }
         }
+
+        PlanEntity planEntity = planDto.toEntity();
+        planRepository.save(planEntity);
 
     }
 
@@ -72,112 +64,52 @@ public class PlanService {
         JSONObject extended = new JSONObject();
         extended.put("department", "");
 
-        if (type.equals("home")) {
-            UserEntity user = userRepository.findById(typeId)
-                    .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
-            JSONObject planList = new JSONObject();
-            try{
-                List<PlanEntity> planEntities = planRepository.findAllByUserId(typeId);
-                JSONArray planArr = new JSONArray();
-                for(PlanEntity planEntity : planEntities){
-                    JSONObject plan = new JSONObject();
-                    plan.put("id", planEntity.getId());
-                    plan.put("title", planEntity.getTitle());
-                    plan.put("content", planEntity.getContent());
-                    plan.put("start", planEntity.getStart_date());
-                    plan.put("end",planEntity.getEnd_date());
-                    String state;
-                    if (planEntity.getState() == null)
-                        state = null;
-                    else if(planEntity.getState() == 0)
-                        state = "미완료";
-                    else if(planEntity.getState() == 1)
-                        state = "완료";
-                    else if(planEntity.getState() == 2)
-                        state = "진행중";
-                    else state = null;
-                    plan.put("state",state);
-
-                    plan.put("extendedProps", extended);
-                    planArr.put(plan);
-                }
-                planList.put("plans", planArr);
-            }catch (Exception e){
-                throw new UserException(ErrorCode.CANT_FIND_PLAN);
+        switch (type) {
+            case "home" -> {
+                UserEntity user = userRepository.findById(typeId)
+                        .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
             }
-            return planList.toString();
-        } else if (type.equals("group")) {
-            GroupEntity group = groupRepository.findById(typeId)
-                    .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
-            JSONObject planList = new JSONObject();
-            try{
-                List<PlanEntity> planEntities = planRepository.findAllByGroupId(typeId);
-                JSONArray planArr = new JSONArray();
-                for(PlanEntity planEntity : planEntities){
-                    JSONObject plan = new JSONObject();
-                    plan.put("id", planEntity.getId());
-                    plan.put("title", planEntity.getTitle());
-                    plan.put("content", planEntity.getContent());
-                    plan.put("start", planEntity.getStart_date());
-                    plan.put("end",planEntity.getEnd_date());
-                    String state;
-                    if (planEntity.getState() == null)
-                        state = null;
-                    else if(planEntity.getState() == 0)
-                        state = "미완료";
-                    else if(planEntity.getState() == 1)
-                        state = "완료";
-                    else if(planEntity.getState() == 2)
-                        state = "진행중";
-                    else state = null;
-                    plan.put("state",state);
-
-                    plan.put("extendedProps", extended);
-                    planArr.put(plan);
-                }
-                planList.put("plans", planArr);
-            }catch (Exception e){
-                throw new UserException(ErrorCode.CANT_FIND_PLAN);
+            case "group" -> {
+                GroupEntity group = groupRepository.findById(typeId)
+                        .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
             }
-            return planList.toString();
-        } else if (type.equals("room")) {
-            RoomEntity room = roomRepository.findById(typeId)
-                    .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
-
-            JSONObject planList = new JSONObject();
-            try{
-                List<PlanEntity> planEntities = planRepository.findAllByRoomId(typeId);
-                JSONArray planArr = new JSONArray();
-                for(PlanEntity planEntity : planEntities){
-                    JSONObject plan = new JSONObject();
-                    plan.put("id", planEntity.getId());
-                    plan.put("title", planEntity.getTitle());
-                    plan.put("content", planEntity.getContent());
-                    plan.put("start", planEntity.getStart_date());
-                    plan.put("end",planEntity.getEnd_date());
-                    String state;
-                    if (planEntity.getState() == null)
-                        state = null;
-                    else if(planEntity.getState() == 0)
-                        state = "미완료";
-                    else if(planEntity.getState() == 1)
-                        state = "완료";
-                    else if(planEntity.getState() == 2)
-                        state = "진행중";
-                    else state = null;
-                    plan.put("state",state);
-
-                    plan.put("extendedProps", extended);
-                    planArr.put(plan);
-                }
-                planList.put("plans", planArr);
-            }catch (Exception e){
-                throw new UserException(ErrorCode.CANT_FIND_PLAN);
+            case "room" -> {
+                RoomEntity room = roomRepository.findById(typeId)
+                        .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
             }
-            return planList.toString();
         }
 
-        return "일정 목록 반환 실패";
+        JSONObject planList = new JSONObject();
+        try {
+            List<PlanEntity> planEntities = planRepository.findAllByUserId(typeId);
+            JSONArray planArr = new JSONArray();
+            for (PlanEntity planEntity : planEntities) {
+                JSONObject plan = new JSONObject();
+                plan.put("id", planEntity.getId());
+                plan.put("title", planEntity.getTitle());
+                plan.put("content", planEntity.getContent());
+                plan.put("start", planEntity.getStart_date());
+                plan.put("end", planEntity.getEnd_date());
+                String state;
+                if (planEntity.getState() == null)
+                    state = null;
+                else if (planEntity.getState() == 0)
+                    state = "미완료";
+                else if (planEntity.getState() == 1)
+                    state = "완료";
+                else if (planEntity.getState() == 2)
+                    state = "진행중";
+                else state = null;
+                plan.put("state", state);
+
+                plan.put("extendedProps", extended);
+                planArr.put(plan);
+            }
+            planList.put("plans", planArr);
+        } catch (Exception e) {
+            throw new UserException(ErrorCode.CANT_FIND_PLAN);
+        }
+        return planList.toString();
     }
 
 
