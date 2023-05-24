@@ -32,11 +32,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("request null");
         }
 
-        System.out.println("----------header start-----------");
-        request.getHeaderNames().asIterator().forEachRemaining(
-                headerName -> System.out.println(headerName + ": " + request.getHeader(headerName))
-        );
-        System.out.println("----------header end----------");
+        /*----header 출력용----*/
+//        System.out.println("----------header start-----------");
+//        request.getHeaderNames().asIterator().forEachRemaining(
+//                headerName -> System.out.println(headerName + ": " + request.getHeader(headerName))
+//        );
+//        System.out.println("----------header end----------");
 
         // 헤더에서 JWT 토큰 받아오기
         String accessToken = jwtTokenProvider.resolveToken(request, "access_token");
