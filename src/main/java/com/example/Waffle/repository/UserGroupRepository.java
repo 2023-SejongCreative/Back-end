@@ -1,7 +1,7 @@
 package com.example.Waffle.repository;
 
-import com.example.Waffle.entity.UserGroup.UserGroupEntity;
-import com.example.Waffle.entity.UserGroup.UserGroupPK;
+import com.example.Waffle.entity.Group.UserGroupEntity;
+import com.example.Waffle.entity.Group.UserGroupPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

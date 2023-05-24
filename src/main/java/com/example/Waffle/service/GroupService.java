@@ -2,10 +2,10 @@ package com.example.Waffle.service;
 
 import com.example.Waffle.dto.GroupDto;
 import com.example.Waffle.dto.UserGroupDto;
-import com.example.Waffle.entity.GroupEntity;
-import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.entity.UserGroup.UserGroupEntity;
+import com.example.Waffle.entity.Group.UserGroupEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
 import com.example.Waffle.repository.GroupRepository;

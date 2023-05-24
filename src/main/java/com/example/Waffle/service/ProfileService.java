@@ -33,7 +33,7 @@ public class ProfileService {
     else if(userEntity.getImage() != null)
         userEntity.changeImage(null);
 
-    userEntity.changeIntroductuon(intro);
+    userEntity.changeIntroduction(intro);
 
     userRepository.save(userEntity);
 

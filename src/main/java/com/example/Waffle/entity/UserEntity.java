@@ -1,8 +1,8 @@
 package com.example.Waffle.entity;
 
 import com.example.Waffle.entity.DM.MessageEntity;
-import com.example.Waffle.entity.UserGroup.UserGroupEntity;
-import com.example.Waffle.entity.UserRoom.UserRoomEntity;
+import com.example.Waffle.entity.Group.UserGroupEntity;
+import com.example.Waffle.entity.Room.UserRoomEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,14 +32,6 @@ public class UserEntity {
 
      @Column(name = "image")
      private String image;
-
-     public void changeIntroductuon(String introduction){
-         this.introduction = introduction;
-     }
-
-     public void changeImage(String image){
-         this.image = image;
-     }
 
      @OneToMany(mappedBy = "user")
      private List<UserGroupEntity> userGroup = new ArrayList<>();
@@ -79,10 +71,13 @@ public class UserEntity {
          return password;
      }
 
+    public void changeIntroduction(String introduction){
+        this.introduction = introduction;
+    }
 
-     public void changeIntroduction(String introduction){
-         this.introduction = introduction;
-     }
+    public void changeImage(String image){
+        this.image = image;
+    }
 
 
 }

@@ -1,8 +1,8 @@
 package com.example.Waffle.repository;
 
-import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
 import com.example.Waffle.entity.NoteEntity;
-import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

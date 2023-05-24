@@ -2,9 +2,9 @@ package com.example.Waffle.service;
 
 
 import com.example.Waffle.dto.NoteDto;
-import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
 import com.example.Waffle.entity.NoteEntity;
-import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
