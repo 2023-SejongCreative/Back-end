@@ -46,6 +46,11 @@ public class MessageService {
                 .time(chatDto.getTime())
                 .build();
 
+        dmEntity.changeLastChat(chatDto.getContent());
+        dmEntity.changeLastTime();
+
+        dmRepository.save(dmEntity);
+
         messageRepository.save(messageEntity);
 
     }

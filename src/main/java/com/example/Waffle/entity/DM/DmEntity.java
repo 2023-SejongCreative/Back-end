@@ -42,5 +42,9 @@ public class DmEntity {
         this.count = count;
     }
 
+    public void changeLastChat(String chat){this.last_chat = chat;}
+
+    public void changeLastTime(){this.last_time = LocalDateTime.now();}
+
 
 }
