@@ -1,0 +1,131 @@
+package com.example.Waffle.controller;
+
+import com.example.Waffle.exception.ErrorCode;
+import com.example.Waffle.exception.UserException;
+import com.example.Waffle.service.VideoService;
+import io.openvidu.java.client.*;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
+
+@Controller
+@RequiredArgsConstructor
+public class VideoController {
+
+    private final VideoService videoService;
+
+    @Value("${openvidu.url}")
+    private String openviduUrl;
+
+    //앱이 OpenVidu 서버에 연결하고 사용자가 OpenVidu Dashboard에 액세스하는 데 사용되는 OpenVidu SECRET
+    @Value("${openvidu.secret}")
+    private String openviduSecret;
+
+    private OpenVidu openvidu;
+
+    @PostConstruct
+    public void init(){
+
+        this.openvidu = new OpenVidu(openviduUrl, openviduSecret);
+    }
+
+    //openvidu 서버에 새로운 session 생성
+    @PostMapping("/chat/session")
+    @ResponseBody
+    public ResponseEntity<Object> initializeSession(@RequestBody Map<String, String> param)
+            throws OpenViduJavaClientException, OpenViduHttpException {
+
+        String sessionId = videoService.createSession(this.openvidu, param);
+
+        System.out.println("[" + sessionId + "]");
+
+        return new ResponseEntity<>(sessionId, HttpStatus.OK);
+    }
+
+    @PostMapping("/chat/session/{session_id}/connect")
+    @ResponseBody
+    public ResponseEntity<Object> createConnection(@PathVariable("session_id") String sessionId,
+                                                   @RequestBody Map<String, String> param)
+        throws OpenViduJavaClientException, OpenViduHttpException{
+
+        Session session = openvidu.getActiveSession(sessionId);
+        if(session == null){
+            throw new UserException(ErrorCode.CANT_FIND_SESSION);
+        }
+
+        ConnectionProperties properties = ConnectionProperties.fromJson(param).build();
+        //해당 세션에 유저를 연결
+        Connection connection = session.createConnection(properties);
+
+        String url = connection.getToken();
+        System.out.println(url);
+
+        return new ResponseEntity<>(url, HttpStatus.OK);
+    }
+
+    @PostMapping("/chat/session/enter")
+    @ResponseBody
+    public ResponseEntity<String> enter(@RequestBody Map<String, String> param){
+
+        int dmId = Integer.parseInt(param.get("id"));
+
+        videoService.enterSession(dmId);
+
+        return ResponseEntity.ok("채팅방에 들어갔습니다.");
+    }
+
+    @PostMapping("/chat/session/leave")
+    @ResponseBody
+    public ResponseEntity<String> leave(@RequestBody Map<String, String> param){
+        int dmId = Integer.parseInt(param.get("id"));
+
+        videoService.leaveSession(dmId);
+
+        return ResponseEntity.ok("채팅방에서 나갔습니다.");
+    }
+
+//   /*-----test 용------*/
+//    @PostMapping("/api/sessions")
+//    @ResponseBody
+//    public ResponseEntity<Object> initialize(@RequestBody Map<String, String> param)
+//            throws OpenViduJavaClientException, OpenViduHttpException {
+//
+//        SessionProperties properties = SessionProperties.fromJson(param).build();
+//        Session session = this.openvidu.createSession(properties);
+//
+//        System.out.println("[" + session.getSessionId());
+//
+//        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+//    }
+//
+//    @PostMapping("/api/sessions/{sessionId}/connections")
+//    @ResponseBody
+//    public ResponseEntity<Object> connection(@PathVariable("sessionId") String sessionId,
+//                                                   @RequestBody Map<String, String> param)
+//            throws OpenViduJavaClientException, OpenViduHttpException {
+//
+//        Session session = openvidu.getActiveSession(sessionId);
+//        if (session == null) {
+//            throw new UserException(ErrorCode.CANT_FIND_SESSION);
+//        }
+//
+//        ConnectionProperties properties = ConnectionProperties.fromJson(param).build();
+//        //해당 세션에 유저를 연결
+//        Connection connection = session.createConnection(properties);
+//
+//        String url = connection.getToken();
+//        System.out.println(url);
+//
+//        return new ResponseEntity<>(url, HttpStatus.OK);
+//    }
+
+}
