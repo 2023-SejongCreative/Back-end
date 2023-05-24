@@ -96,14 +96,10 @@ public class NoteService {
         List<NoteEntity> noteEntities = new ArrayList<>();
         try {
             if (type.equals("group")) {
-
-                GroupEntity group = getGroupById(id);
-                noteEntities = noteRepository.findAllByGroup(group);
+                noteEntities = noteRepository.findAllByGroupId(id);
             }
             else if (type.equals("room")) {
-
-                RoomEntity room = getRoomById(id);
-                noteEntities = noteRepository.findAllByRoom(room);
+                noteEntities = noteRepository.findAllByRoomId(id);
             }
             else{
                 throw new UserException(ErrorCode.BAD_REQUEST);
@@ -207,14 +203,11 @@ public class NoteService {
         List<NoteEntity> noteEntities = new ArrayList<>();
         try {
             if (type.equals("group")) {
-                GroupEntity groupEntity = getGroupById(id);
-
-                noteEntities = noteRepository.findAllByGroup(groupEntity);
+                noteEntities = noteRepository.findAllByGroupId(id);
 
             } else if (type.equals("room")) {
-                RoomEntity roomEntity = getRoomById(id);
 
-                noteEntities = noteRepository.findAllByRoom(roomEntity);
+                noteEntities = noteRepository.findAllByRoomId(id);
             }
 
             for (NoteEntity noteEntity : noteEntities) {

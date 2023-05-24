@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface NoteRepository extends JpaRepository<NoteEntity, Long> {
 
-    List<NoteEntity> findAllByGroup(GroupEntity group);
+    List<NoteEntity> findAllByGroupId(Long id);
 
-    List<NoteEntity> findAllByRoom(RoomEntity room);
+    List<NoteEntity> findAllByRoomId(Long id);
 
     Optional<NoteEntity> findById(int id);
 
