@@ -13,5 +13,5 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
 
     List<RoomEntity> findAllByGroup(GroupEntity groupEntity);
 
-    Optional<RoomEntity> findById(int roomId);
+    Optional<RoomEntity> findById(Long roomId);
 }

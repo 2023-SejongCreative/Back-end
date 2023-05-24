@@ -36,7 +36,7 @@ public class RoomService {
     private final NoteService noteService;
 
     @Transactional
-    public Long createRoom(RoomDto roomDto, String accessToken, int groupId){
+    public Long createRoom(RoomDto roomDto, String accessToken, Long groupId){
         // Access Token 에서 User email 을 가져오기
         String email = jwtTokenProvider.getEmail(accessToken);
 
@@ -62,7 +62,7 @@ public class RoomService {
         return roomEntity.getId();
     }
 
-    public String roomList(String accessToken, int groupId){
+    public String roomList(String accessToken, Long groupId){
 
         // Access Token 에서 User email 을 가져오기
         String email = jwtTokenProvider.getEmail(accessToken);
@@ -114,7 +114,7 @@ public class RoomService {
     }
 
     @Transactional
-    public void inviteUser(int roomId, String email){
+    public void inviteUser(Long roomId, String email){
 
         //email로 user 정보 찾기
         UserEntity userEntity = userRepository.findByemail(email).orElseThrow(
