@@ -26,7 +26,7 @@ public class PlanController {
                                              @PathVariable("type_id") Long typeId){
 
 
-        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"),param.get("start"),param.get("end"),param.get("state"));
+        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"),param.get("start"), param.get("end"), param.get("state"));
 
         planService.createPlan(planDto,type,typeId);
 

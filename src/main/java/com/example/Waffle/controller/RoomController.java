@@ -58,9 +58,10 @@ public class RoomController {
 
     @DeleteMapping("/{room_id}/deleteroom")
     @ResponseBody
-    public ResponseEntity<Object> deleteRoom(@PathVariable("room_id") Long roomId){
+    public ResponseEntity<Object> deleteRoom(@PathVariable("room_id") Long roomId,
+                                             @RequestHeader("access_token") String atk){
 
-        roomService.deleteRoom(roomId);
+        roomService.deleteRoom(roomId, atk);
 
         return new ResponseEntity<>("룸 삭제에 성공하였습니다.", HttpStatus.OK);
     }

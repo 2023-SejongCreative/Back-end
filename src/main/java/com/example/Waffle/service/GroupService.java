@@ -11,6 +11,7 @@ import com.example.Waffle.exception.UserException;
 import com.example.Waffle.repository.GroupRepository;
 import com.example.Waffle.repository.UserGroupRepository;
 import com.example.Waffle.repository.UserRepository;
+import com.example.Waffle.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,6 +30,8 @@ public class GroupService {
     private final RoomService roomService;
     private final PlanService planService;
     private final NoteService noteService;
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Transactional
     public Long createGroup(String email, GroupDto groupDto){
 
@@ -93,11 +96,24 @@ public class GroupService {
     }
 
     @Transactional
-    public void deleteGroup(Long groupId){
+    public void deleteGroup(Long groupId, String atk){
+
+        String email = jwtTokenProvider.getEmail(atk);
+
+        UserEntity userEntity = userRepository.findByemail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
+
+        GroupEntity groupEntity = groupRepository.findById(groupId)
+                .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
+
+        UserGroupEntity userGroupEntity = userGroupRepository.findByUserIdAndGroupId(userEntity.getId(), groupEntity.getId())
+                .orElseThrow(() -> new UserException(ErrorCode.BAD_REQUEST));
+
+        if(userGroupEntity.getManager() == 0){
+            throw new UserException(ErrorCode.NO_MANAGER);
+        }
 
         try {
-            GroupEntity groupEntity = groupRepository.findById(groupId)
-                    .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
 
             //group의 plan 전부 삭제
             planService.allDeletePlan("group", groupEntity.getId());

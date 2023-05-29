@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -64,24 +65,28 @@ public class PlanService {
         JSONObject extended = new JSONObject();
         extended.put("department", "");
 
+        List<PlanEntity> planEntities = new ArrayList<>();
+
         switch (type) {
             case "home" -> {
                 UserEntity user = userRepository.findById(typeId)
                         .orElseThrow(() -> new UserException(ErrorCode.NO_USER));
+                planEntities = planRepository.findAllByUserId(typeId);
             }
             case "group" -> {
                 GroupEntity group = groupRepository.findById(typeId)
                         .orElseThrow(() -> new UserException(ErrorCode.NO_GROUP));
+                planEntities = planRepository.findAllByGroupId(typeId);
             }
             case "room" -> {
                 RoomEntity room = roomRepository.findById(typeId)
                         .orElseThrow(() -> new UserException(ErrorCode.NO_ROOM));
+                planEntities = planRepository.findAllByRoomId(typeId);
             }
         }
 
         JSONObject planList = new JSONObject();
         try {
-            List<PlanEntity> planEntities = planRepository.findAllByUserId(typeId);
             JSONArray planArr = new JSONArray();
             for (PlanEntity planEntity : planEntities) {
                 JSONObject plan = new JSONObject();

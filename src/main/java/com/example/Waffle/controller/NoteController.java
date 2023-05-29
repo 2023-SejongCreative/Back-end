@@ -22,7 +22,7 @@ public class NoteController {
 
     @PostMapping("/note/{type}/{type_id}/create")
     @ResponseBody
-    public ResponseEntity<String> createNote(@PathVariable("type") String type,
+    public ResponseEntity<Object> createNote(@PathVariable("type") String type,
                                              @PathVariable("type_id") Long id,
                                              @RequestBody Map<String, String> param,
                                              @RequestHeader("access_token") String atk){
@@ -34,9 +34,9 @@ public class NoteController {
                 param.get("content"), date, Integer.parseInt(param.get("notice")));
 
 
-        noteService.createNote(noteDto, type, id, atk);
+        Long noteId = noteService.createNote(noteDto, type, id, atk);
 
-        return ResponseEntity.ok("게시글 생성이 완료되었습니다.");
+        return new ResponseEntity<>(noteId, HttpStatus.OK);
     }
 
     @GetMapping("/note/{type}/{type_id}/notelist")
@@ -63,26 +63,34 @@ public class NoteController {
         return new ResponseEntity<>(note, HttpStatus.OK);
     }
 
-    @PostMapping("/note/{note_id}/update")
+    @PostMapping("/note/{note_id}/update/{manager}")
     @ResponseBody
     public ResponseEntity<String> updateNote(@PathVariable("note_id") int id,
-                                             @RequestBody Map<String, String> param){
+                                             @PathVariable("manager") int manager,
+                                             @RequestBody Map<String, String> param,
+                                             @RequestHeader("access_token") String atk){
+
+        System.out.println(manager);
 
         LocalDate date = LocalDate.parse(param.get("date"), DateTimeFormatter.ISO_DATE);
 
         NoteDto noteDto = new NoteDto(param.get("title"), param.get("content"), date, Integer.parseInt(param.get("notice")));
         System.out.println(param.get("notice"));
 
-        noteService.updateNote(noteDto, id);
+        noteService.updateNote(noteDto, id, atk, manager);
 
         return ResponseEntity.ok("게시글 수정에 성공하였습니다.");
     }
 
-    @DeleteMapping("/note/{note_id}/delete")
+    @DeleteMapping("/note/{note_id}/delete/{manager}")
     @ResponseBody
-    public ResponseEntity<String> deleteNote(@PathVariable("note_id") int id){
+    public ResponseEntity<String> deleteNote(@PathVariable("note_id") int id,
+                                             @PathVariable("manager") int manager,
+                                             @RequestHeader("access_token") String atk){
 
-        noteService.deleteNote(id);
+        System.out.println(manager);
+
+        noteService.deleteNote(id, atk, manager);
 
         return ResponseEntity.ok("게시글 삭제가 완료되었습니다.");
     }

@@ -90,10 +90,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             //atk 유효하지 않고, rtk가 없을 경우
             else throw new UserException(ErrorCode.UNAUTHORIZED);
         }
-        //atk가 없을 경우
-        else{
-            throw new UserException(ErrorCode.NO_ATK);
-        }
 
         // 다음 Filter 실행
         chain.doFilter(request, response);

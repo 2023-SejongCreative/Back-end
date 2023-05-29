@@ -1,5 +1,6 @@
 package com.example.Waffle.controller;
 
+import com.example.Waffle.dto.LoginResponseDto;
 import com.example.Waffle.dto.UserDto;
 import com.example.Waffle.dto.LoginDto;
 import com.example.Waffle.token.JwtTokenProvider;
@@ -43,9 +44,9 @@ public class AuthController {
         LoginDto loginDto = new LoginDto(param.get("email"),
                 param.get("password"));
 
-        Long id = userService.login(loginDto, response);
+        LoginResponseDto loginResponseDto = userService.login(loginDto, response);
 
-        return new ResponseEntity<>(id, HttpStatus.OK);
+        return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
     @PostMapping("/")

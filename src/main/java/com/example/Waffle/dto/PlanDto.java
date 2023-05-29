@@ -63,8 +63,10 @@ public class PlanDto {
     public void setEndDate(String endDate){
         if(endDate == null || endDate.equals(""))
             this.endDate = null;
-        else
+        else {
+            //String end = endDate.substring(0, 10);
             this.endDate = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
+        }
     }
 
 

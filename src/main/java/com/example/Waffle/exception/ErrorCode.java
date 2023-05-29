@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     /*400 BAD_REQUEST : 잘못된 요청*/
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON-002", "잘못된 요청입니다,"),
+    NO_MANAGER(HttpStatus.BAD_REQUEST, "COMMON-003", "관리자가 아닙니다."),
 
     NO_USER(HttpStatus.BAD_REQUEST, "LOGIN-001", "일치하는 회원이 없습니다."),
     NO_PASSWORD(HttpStatus.BAD_REQUEST, "LOGIN-002", "비밀번호가 일치하지 않습니다."),
@@ -21,6 +22,7 @@ public enum ErrorCode {
 
     NO_ROOM(HttpStatus.BAD_REQUEST, "ROOM-001", "일치하는 룸을 찾을 수 없습니다."),
     CANT_FINDROOM(HttpStatus.BAD_REQUEST, "ROOM-002", "룸 목록을 조회할 수 없습니다."),
+    CANT_FIND_GROUPUSER(HttpStatus.BAD_REQUEST, "ROOM-004", "해당 사용자는 그룹에 존재하지 않습니다."),
 
     TOO_MANY_PEOPLE(HttpStatus.BAD_REQUEST, "DM-001", "사용자가 너무 많습니다."),
     NO_DM(HttpStatus.BAD_REQUEST, "DM-002", "채팅방이 존재하지 않습니다."),
@@ -37,6 +39,7 @@ public enum ErrorCode {
 
     CANT_FIND_NOTE(HttpStatus.BAD_REQUEST, "NOTE-001", "게시글을 찾을 수 없습니다."),
     NO_NOTE(HttpStatus.BAD_REQUEST, "NOTE-002", "게시글이 존재하지 않습니다."),
+    NO_AUTHORITY(HttpStatus.BAD_REQUEST, "NOTE-003", "게시글에 대한 권한이 없습니다."),
 
     /*401 UNAUTHROIZED : 인증 안됨*/
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-001", "리프레시 토큰이 유효하지 않습니다."),

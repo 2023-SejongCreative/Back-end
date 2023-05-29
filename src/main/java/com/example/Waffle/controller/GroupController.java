@@ -47,13 +47,14 @@ public class GroupController {
     }
 
     @DeleteMapping("/{group_id}/deletegroup")
-    public ResponseEntity<Object> deleteGroup(@PathVariable("group_id") int intId){
+    public ResponseEntity<Object> deleteGroup(@PathVariable("group_id") int intId,
+                                              @RequestHeader("access_token") String atk){
 
         Long groupId = Long.valueOf(intId);
 
         //반복문으로 룸 지우기
 
-        groupService.deleteGroup(groupId);
+        groupService.deleteGroup(groupId, atk);
 
         return new ResponseEntity<>("그룹 삭제에 성공하였습니다.", HttpStatus.OK);
     }
