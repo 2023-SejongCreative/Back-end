@@ -26,11 +26,8 @@ public class PlanController {
                                              @PathVariable("type_id") Long typeId){
 
 
-        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"));
+        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"),param.get("start"), param.get("end"), param.get("state"));
 
-        planDto.setStartDate(param.get("start"));
-        planDto.setEndDate(param.get("end"));
-        planDto.stringToIntState(param.get("state"));
         planService.createPlan(planDto,type,typeId);
 
 
@@ -54,10 +51,7 @@ public class PlanController {
 
 
 
-        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"));
-        planDto.setStartDate(param.get("start"));
-        planDto.setEndDate(param.get("end"));
-        planDto.stringToIntState(param.get("state"));
+        PlanDto planDto = new PlanDto(param.get("title"), param.get("content"),param.get("start"),param.get("end"),param.get("state"));
 
         planService.updatePlan(planDto,planId);
 

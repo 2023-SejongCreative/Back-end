@@ -1,8 +1,7 @@
-package com.example.Waffle.entity.UserGroup;
+package com.example.Waffle.entity.Group;
 
-import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
 import com.example.Waffle.entity.UserEntity;
-import jakarta.persistence.IdClass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

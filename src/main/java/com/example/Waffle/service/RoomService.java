@@ -3,16 +3,14 @@ package com.example.Waffle.service;
 
 import com.example.Waffle.dto.RoomDto;
 import com.example.Waffle.dto.UserRoomDto;
-import com.example.Waffle.entity.GroupEntity;
-import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
+import com.example.Waffle.entity.Group.UserGroupEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
-import com.example.Waffle.entity.UserRoom.UserRoomEntity;
+import com.example.Waffle.entity.Room.UserRoomEntity;
 import com.example.Waffle.exception.ErrorCode;
 import com.example.Waffle.exception.UserException;
-import com.example.Waffle.repository.GroupRepository;
-import com.example.Waffle.repository.RoomRepository;
-import com.example.Waffle.repository.UserRepository;
-import com.example.Waffle.repository.UserRoomRepository;
+import com.example.Waffle.repository.*;
 import com.example.Waffle.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
@@ -31,12 +29,13 @@ public class RoomService {
     private final GroupRepository groupRepository;
     private final RoomRepository roomRepository;
     private final UserRoomRepository userRoomRepository;
+    private final UserGroupRepository userGroupRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PlanService planService;
     private final NoteService noteService;
 
     @Transactional
-    public Long createRoom(RoomDto roomDto, String accessToken, int groupId){
+    public Long createRoom(RoomDto roomDto, String accessToken, Long groupId){
         // Access Token 에서 User email 을 가져오기
         String email = jwtTokenProvider.getEmail(accessToken);
 
@@ -62,12 +61,7 @@ public class RoomService {
         return roomEntity.getId();
     }
 
-    @Transactional
-    public List<RoomEntity> getRooms(GroupEntity groupEntity){
-        return roomRepository.findAllByGroup(groupEntity);
-    }
-
-    public String roomList(String accessToken, int groupId){
+    public String roomList(String accessToken, Long groupId){
 
         // Access Token 에서 User email 을 가져오기
         String email = jwtTokenProvider.getEmail(accessToken);
@@ -85,7 +79,7 @@ public class RoomService {
         JSONObject roomList = new JSONObject();
         try{
             //groupId로 해당 group의 룸 조회
-            List<RoomEntity> roomEntities = getRooms(groupEntity);
+            List<RoomEntity> roomEntities = roomRepository.findAllByGroup(groupEntity);
 
             JSONArray roomArr = new JSONArray();
 
@@ -93,21 +87,16 @@ public class RoomService {
             for(RoomEntity roomEntity : roomEntities){
                 JSONObject room = new JSONObject();
 
-                room.put("room_name", roomEntity.getName());
-                room.put("room_id", roomEntity.getId());
-                room.put("type", roomEntity.getType());
-
                 //UserRoom에서 사용자가 해당 룸에 초대된 사람인지 조회
                 Optional<UserRoomEntity> userRoomEntity = userRoomRepository.findByUserIdAndRoomId(userEntity.getId(), roomEntity.getId());
                 if(userRoomEntity.isPresent()){ //초대되었으면
+                    room.put("room_name", roomEntity.getName());
+                    room.put("room_id", roomEntity.getId());
+                    room.put("type", roomEntity.getType());
                     room.put("manager", userRoomEntity.get().getManager());
                     room.put("include", 1);
+                    roomArr.put(room);
                 }
-                else{ //초대 되지 않았으면
-                    room.put("manager", 0);
-                    room.put("include", 0);
-                }
-                roomArr.put(room);
             }
             roomList.put("room", roomArr);
 
@@ -119,7 +108,7 @@ public class RoomService {
     }
 
     @Transactional
-    public void inviteUser(int roomId, String email){
+    public void inviteUser(Long roomId, String email){
 
         //email로 user 정보 찾기
         UserEntity userEntity = userRepository.findByemail(email).orElseThrow(
@@ -131,6 +120,10 @@ public class RoomService {
                 () -> new UserException(ErrorCode.NO_ROOM)
         );
 
+        Optional<UserGroupEntity> userGroupEntity = userGroupRepository.findByUserIdAndGroupId(userEntity.getId(), roomEntity.getGroup().getId());
+        if(userGroupEntity.isEmpty()){
+            throw new UserException(ErrorCode.CANT_FIND_GROUPUSER);
+        }
 
         //UserRoom에서 사용자가 해당 룸에 초대된 사람인지 조회
         Optional<UserRoomEntity> userRoom = userRoomRepository.findByUserIdAndRoomId(userEntity.getId(), roomEntity.getId());
@@ -147,13 +140,31 @@ public class RoomService {
     }
 
     @Transactional
-    public void deleteRoom(Long roomId){
+    public void deleteRoom(Long roomId, String type){
+
+        //roomId로 room 정보 찾기
+        RoomEntity roomEntity = roomRepository.findById(roomId).orElseThrow(
+                () -> new UserException(ErrorCode.NO_ROOM)
+        );
+
+        if(!type.equals("group")){
+
+            String email = jwtTokenProvider.getEmail(type);
+
+            //email로 user 정보 찾기
+            UserEntity userEntity = userRepository.findByemail(email).orElseThrow(
+                    () -> new UserException(ErrorCode.NO_USER)
+            );
+            //UserRoom에서 사용자가 해당 룸에 초대된 사람인지 조회
+            UserRoomEntity userRoom = userRoomRepository.findByUserIdAndRoomId(userEntity.getId(), roomEntity.getId())
+                    .orElseThrow(() -> new UserException(ErrorCode.BAD_REQUEST));
+
+            if(userRoom.getManager() == 0){
+                throw new UserException(ErrorCode.NO_MANAGER);
+            }
+        }
 
         try {
-            //roomId로 room 정보 찾기
-            RoomEntity roomEntity = roomRepository.findById(roomId).orElseThrow(
-                    () -> new UserException(ErrorCode.NO_ROOM)
-            );
 
             //room에 속한 plan 모두 삭제
             planService.allDeletePlan("room", roomId);
@@ -169,5 +180,19 @@ public class RoomService {
             throw new UserException(ErrorCode.INTER_SERVER_ERROR);
         }
 
+    }
+
+    @Transactional
+    public void deleteAllRoom(GroupEntity groupEntity){
+
+        try {
+            List<RoomEntity> roomEntities = roomRepository.findAllByGroup(groupEntity);
+
+            for (RoomEntity roomEntity : roomEntities) {
+                deleteRoom(roomEntity.getId(), "group");
+            }
+        }catch(Exception e){
+            throw new UserException(ErrorCode.INTER_SERVER_ERROR);
+        }
     }
 }

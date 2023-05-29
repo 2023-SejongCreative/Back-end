@@ -1,6 +1,7 @@
 package com.example.Waffle.service;
 
 import com.example.Waffle.dto.LoginDto;
+import com.example.Waffle.dto.LoginResponseDto;
 import com.example.Waffle.dto.TokenDto;
 import com.example.Waffle.dto.UserDto;
 import com.example.Waffle.entity.UserEntity;
@@ -43,7 +44,7 @@ public class UserService {
 
     @Transactional
     //로그인 처리
-    public Long login(LoginDto loginDto, HttpServletResponse response){
+    public LoginResponseDto login(LoginDto loginDto, HttpServletResponse response){
         //존재하는 유저인지 확인
         UserEntity userEntity = userRepository.findByemail(loginDto.getEmail()).orElseThrow(
                 () -> new UserException(ErrorCode.NO_USER)
@@ -64,7 +65,9 @@ public class UserService {
         // response 헤더에 Access Token / Refresh Token 넣음
         setHeader(response, tokenDto);
 
-        return userEntity.getId();
+        LoginResponseDto loginResponseDto = new LoginResponseDto(userEntity.getId(), userEntity.getImage());
+
+        return loginResponseDto;
 
     }
 

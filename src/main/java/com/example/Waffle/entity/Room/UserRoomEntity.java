@@ -1,13 +1,10 @@
-package com.example.Waffle.entity.UserRoom;
+package com.example.Waffle.entity.Room;
 
-import com.example.Waffle.entity.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
 
 @Getter
 @Entity

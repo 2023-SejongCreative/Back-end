@@ -1,8 +1,8 @@
 package com.example.Waffle.dto;
 
-import com.example.Waffle.entity.GroupEntity;
+import com.example.Waffle.entity.Group.GroupEntity;
 import com.example.Waffle.entity.PlanEntity;
-import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +32,14 @@ public class PlanDto {
         this.content = content;
     }
 
+    public PlanDto(String title, String content, String startDate, String endDate, String state){
+        this.title = title;
+        this.content = content;
+        setStartDate(startDate);
+        setEndDate(endDate);
+        stringToIntState(state);
+    }
+
     public void stringToIntState(String state){
         if(state !=null) {
             if (state.equals("미완료"))
@@ -55,8 +63,10 @@ public class PlanDto {
     public void setEndDate(String endDate){
         if(endDate == null || endDate.equals(""))
             this.endDate = null;
-        else
+        else {
+            //String end = endDate.substring(0, 10);
             this.endDate = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
+        }
     }
 
 

@@ -112,16 +112,6 @@ public class JwtTokenProvider {
         return request.getHeader(name);
     }
 
-    // 어세스 토큰 헤더 설정
-    public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
-        response.setHeader("Access_Token", accessToken);
-    }
-
-    // 리프레시 토큰 헤더 설정
-    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
-        response.setHeader("Refresh_Token", refreshToken);
-    }
-
     //토큰 유효시간 얻기
     public Long getExpiration(String accessToken) {
         // accessToken 남은 유효시간

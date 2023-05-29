@@ -1,6 +1,6 @@
-package com.example.Waffle.entity.UserRoom;
+package com.example.Waffle.entity.Room;
 
-import com.example.Waffle.entity.RoomEntity;
+import com.example.Waffle.entity.Room.RoomEntity;
 import com.example.Waffle.entity.UserEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;

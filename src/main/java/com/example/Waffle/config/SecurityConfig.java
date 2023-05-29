@@ -1,6 +1,7 @@
 package com.example.Waffle.config;
 
 
+import com.example.Waffle.exception.ExceptionHandlerFilter;
 import com.example.Waffle.token.JwtAuthenticationFilter;
 import com.example.Waffle.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +70,8 @@ public class SecurityConfig{
                 //.logoutSuccessUrl("/login")
                 .and()
 
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
 
         return http.build();
     }
